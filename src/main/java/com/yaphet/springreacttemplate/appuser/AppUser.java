@@ -14,9 +14,8 @@ import java.util.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 @Entity
-@Table(name="app_user")
+@Table(name="app_users")
 public class AppUser {
     @Id
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)

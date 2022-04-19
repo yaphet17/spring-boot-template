@@ -8,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -40,9 +42,12 @@ public class AppUserService implements UserDetailsService {
         //save user to the database
         appUserRepository.save(appUser);
     }
+    @Transactional
     public void updateAppUserRole(AppUser appUser){
         AppUser tempAppUser=appUserRepository.findByEmail(appUser.getEmail()).orElseThrow(()->new IllegalStateException("User not found"));
-       //TODO: check there is a change in app user roles
+        if(Objects.equals(appUser.getRoles(),tempAppUser.getRoles())){
+            return;
+        }
         appUserRepository.save(appUser);
     }
     public String signUpUser(AppUser appUser){

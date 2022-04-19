@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
                 "com.yaphet.springreacttemplate.error",
                 "com.yaphet.springreacttemplate.security",
                 "com.yaphet.springreacttemplate.role",
+                "com.yaphet.springreacttemplate.privilege",
 
         })
 public class SpringReactTemplateApplication {

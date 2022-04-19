@@ -2,7 +2,7 @@ package com.yaphet.springreacttemplate.role;
 
 import com.yaphet.springreacttemplate.appuser.AppUser;
 import com.yaphet.springreacttemplate.appuser.AppUserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class RoleService {
     private final RoleRepository roleRepository;
@@ -64,5 +64,14 @@ public class RoleService {
             isUpdated=true;
         }
         return isUpdated;
+    }
+
+    @Transactional
+    public void updateRolePrivilege(Role role){
+        Role tempRole=roleRepository.findById(role.getId()).orElseThrow(()->new IllegalStateException("Role not found with id="+1));
+        if(Objects.equals(role.getPrivileges(),tempRole.getPrivileges())){
+            return;
+        }
+        roleRepository.save(role);
     }
 }
