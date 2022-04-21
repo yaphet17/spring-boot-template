@@ -2,6 +2,8 @@ package com.yaphet.springreacttemplate.role;
 
 import com.yaphet.springreacttemplate.appuser.AppUser;
 import com.yaphet.springreacttemplate.appuser.AppUserService;
+import com.yaphet.springreacttemplate.privilege.Privilege;
+import com.yaphet.springreacttemplate.privilege.PrivilegeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import java.util.Set;
 @Service
 public class RoleService {
     private final RoleRepository roleRepository;
+    private final PrivilegeService privilegeService;
     private final AppUserService  appUserService;
     public List<Role> getRoleList() {
         return roleRepository.findAll();
@@ -32,14 +35,6 @@ public class RoleService {
     }
     public Role getRoleById(Long id){
         return roleRepository.findById(id).orElseThrow(()->new IllegalStateException("Role doesn't exist"));
-    }
-    public void assignRole(String email,String roleName){
-        AppUser appUser=appUserService.getAppUser(email);
-        Role role=getRoleByName(roleName);
-        Set<Role> roles=appUser.getRoles();
-        roles.add(role);
-        appUser.setRoles(roles);
-        appUserService.updateAppUserRole(appUser);
     }
 
     public void deleteRole(Long roleId) {
@@ -65,7 +60,17 @@ public class RoleService {
         }
         return isUpdated;
     }
-
+    public void assignPrivilege(List<Privilege> privileges, String roleName) {
+        Role role=getRoleByName(roleName);
+        Set<Privilege> rolePrivileges=role.getPrivileges();
+        for(Privilege privilege:privileges){
+            if(privilegeService.getPrivilegeByName(privilege.getPrivilegeName())!=null){
+                rolePrivileges.add(privilege);
+            }
+        }
+        role.setPrivileges(rolePrivileges);
+        updateRolePrivilege(role);
+    }
     @Transactional
     public void updateRolePrivilege(Role role){
         Role tempRole=roleRepository.findById(role.getId()).orElseThrow(()->new IllegalStateException("Role not found with id="+1));
@@ -74,4 +79,6 @@ public class RoleService {
         }
         roleRepository.save(role);
     }
+
+
 }

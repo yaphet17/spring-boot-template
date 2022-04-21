@@ -72,9 +72,9 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
             privilegeService.create(privilege);
         }
         //assign privileges to super_admin role;
-        privilegeService.assignPrivilege(privileges,"SUPER_ADMIN");
+        roleService.assignPrivilege(privileges,"SUPER_ADMIN");
         //assign super admin role
-        roleService.assignRole(adminAppUser.getEmail(),"SUPER_ADMIN");
+        appUserService.assignRole(adminAppUser.getEmail(),"SUPER_ADMIN");
 
         alreadySetup=true;
 

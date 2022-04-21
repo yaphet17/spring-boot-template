@@ -4,10 +4,7 @@ import com.yaphet.springreacttemplate.role.Role;
 import com.yaphet.springreacttemplate.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Set;
-
 @RequiredArgsConstructor
 @Service
 public class PrivilegeService {
@@ -33,17 +30,7 @@ public class PrivilegeService {
         privilegeRepository.save(privilege);
     }
 
-    public void assignPrivilege(List<Privilege> privileges, String roleName) {
-        Role role=roleService.getRoleByName(roleName);
-        Set<Privilege> rolePrivileges=role.getPrivileges();
-        for(Privilege privilege:privileges){
-            if(privilegeRepository.findByPrivilegeName(privilege.getPrivilegeName()).isPresent()){
-                rolePrivileges.add(privilege);
-            }
-        }
-        role.setPrivileges(rolePrivileges);
-        roleService.updateRolePrivilege(role);
-    }
+
 
 
 }

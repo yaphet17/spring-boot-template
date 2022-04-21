@@ -22,6 +22,7 @@
         <td th:text="${role.roleDescription}"></td>
         <td>
             <a th:href="@{/role/edit/{id}(id=${role.id})}" class="btn btn-primary">Edit</a>
+            <a th:href="@{/role/assign-privilege/{id}(id=${role.id})}" class="btn btn-primary">Assign Privilege</a>
             <a th:href="@{/role/delete/{id}(id=${role.id})}" class="btn btn-primary">Delete</a>
         </td>
     </tr>

@@ -1,8 +1,10 @@
 package com.yaphet.springreacttemplate.role;
 
+import com.yaphet.springreacttemplate.privilege.Privilege;
+import com.yaphet.springreacttemplate.privilege.PrivilegeService;
+import com.yaphet.springreacttemplate.privilege.SelectPrivilege;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.List;
 public class RoleController {
 
     private final RoleService roleService;
+    private final PrivilegeService privilegeService;
 
     @GetMapping("/index")
     public String roleList(Model model){
@@ -65,7 +68,28 @@ public class RoleController {
             redirectAttr.addAttribute("error","no change found");
             return "redirect:/role/edit/{id}";
         }
-        return "redirect:/role/detaill/{id}";
+        return "redirect:/role/detail/{id}";
     }
+    @GetMapping("/assign-privilege/{id}")
+    public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){
+        Role role=roleService.getRoleById(id);
+        List<Privilege> privilegeList=privilegeService.getAllPrivileges();
+        model.addAttribute("role",role);
+        model.addAttribute("selectedPrivilege",new SelectPrivilege(privilegeList));
+        return "assign-privilege";
+    }
+    @PostMapping("/assign-privilege")
+    public String assignPrivilege(@ModelAttribute Role role,@ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
+                                  RedirectAttributes redirectAttr){
+        if(result.hasErrors()){
+            redirectAttr.addAttribute("error","failed to assign privilege to "+role.getRoleName()+" role");
+            return "redirect:assign-privilege/"+role.getId();
+        }
+        roleService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
+        redirectAttr.addAttribute("id",role.getId());
+        redirectAttr.addAttribute("success","privilege successfully assigned");
+        return "redirect:/role/detail/{id}";
+    }
+
 
 }

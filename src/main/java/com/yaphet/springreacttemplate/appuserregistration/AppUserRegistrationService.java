@@ -30,7 +30,7 @@ public class AppUserRegistrationService {
         }
         String token= appUserService.signUpUser(appUser);
         //assign default role to new user
-        roleService.assignRole(appUser.getEmail(),"USER");
+        appUserService.assignRole(appUser.getEmail(),"USER");
         String link="http://10.240.72.11:8080/user/confirm?token="+token;
         emailSender.send(appUser.getEmail(),buildEmail(appUser.getFirstName()+" "+appUser.getLastName(),link));
     }
