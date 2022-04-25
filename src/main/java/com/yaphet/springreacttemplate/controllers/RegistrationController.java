@@ -11,17 +11,13 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("user")
+@RequestMapping("account")
 public class RegistrationController {
 
     private final RegistrationService appUserRegistrationService;
 
-    @GetMapping("/home")
-    public String home(){
-        return "registration/home";
-    }
     @GetMapping("/register")
-    public String registerForm(Model model){
+    public String registrationForm(Model model){
         AppUser appUser=new AppUser();
         model.addAttribute("appUser",appUser);
         return "registration/register-user";

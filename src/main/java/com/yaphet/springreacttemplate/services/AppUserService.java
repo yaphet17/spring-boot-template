@@ -26,11 +26,6 @@ public class AppUserService implements UserDetailsService {
     private final String USER_NOT_FOUND_MSG="user with %s not found";
 
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser appUser=appUserRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
-        return new AppUserDetails(appUser);
-    }
     public AppUser getAppUser(String email){
         return appUserRepository.findByEmail(email).orElseThrow(()->new IllegalStateException("User not found"));
     }
@@ -40,7 +35,6 @@ public class AppUserService implements UserDetailsService {
         if(isEmailTaken){
             throw new IllegalStateException("Email already taken");
         }
-        //save user to the database
         appUserRepository.save(appUser);
     }
     @Transactional
@@ -52,6 +46,11 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser appUser=appUserRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
+        return new AppUserDetails(appUser);
+    }
 
     public String signUpUser(AppUser appUser){
 
