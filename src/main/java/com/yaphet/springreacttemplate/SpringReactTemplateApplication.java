@@ -3,23 +3,15 @@ package com.yaphet.springreacttemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @ComponentScan(basePackages =
         {
-                "com.yaphet.springreacttemplate.dbintializer",
-                "com.yaphet.springreacttemplate.appuser",
-                "com.yaphet.springreacttemplate.appuserregistration",
-                "com.yaphet.springreacttemplate.email",
-                "com.yaphet.springreacttemplate.error",
-                "com.yaphet.springreacttemplate.security",
-                "com.yaphet.springreacttemplate.role",
-                "com.yaphet.springreacttemplate.privilege",
-                "com.yaphet.springreacttemplate.roleprivilege",
-                "com.yaphet.springreacttemplate.appuserrole"
+                "com.yaphet.springreacttemplate.models",
+                "com.yaphet.springreacttemplate.repositories",
+                "com.yaphet.springreacttemplate.controllers",
+                "com.yaphet.springreacttemplate.services",
+                "com.yaphet.springreacttemplate.utilities"
 
         })
 public class SpringReactTemplateApplication {
