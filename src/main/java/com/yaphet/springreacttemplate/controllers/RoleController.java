@@ -26,7 +26,7 @@ public class RoleController {
 
     private final RolePrivilegeService rolePrivilegeService;
 
-    @GetMapping("/index")
+    @GetMapping
     public String roleList(Model model){
         List<Role> roleList=roleService.getRoleList();
         model.addAttribute("roleList",roleList);

@@ -16,7 +16,7 @@ import java.util.List;
 public class PrivilegeController {
     private final PrivilegeService privilegeService;
 
-    @GetMapping("/index")
+    @GetMapping
     public String privilegeList(Model model){
         List<Privilege> privilegeList=privilegeService.getAllPrivileges();
         model.addAttribute("privilegeList",privilegeList);

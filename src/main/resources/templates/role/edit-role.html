@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container">
-    <a th:href="@{/role/index}" class="btn btn-info text-white">Role List</a>
+    <a th:href="@{/role}" class="btn btn-info text-white">Role List</a>
 <form action="#" th:action="@{/role/edit}" th:object="${role}" method="POST">
     <input type="text" th:field="*{id}" hidden>
     <div class="mb-3">

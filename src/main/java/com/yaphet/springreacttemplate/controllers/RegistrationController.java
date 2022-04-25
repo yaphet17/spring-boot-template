@@ -3,13 +3,14 @@ package com.yaphet.springreacttemplate.controllers;
 import com.yaphet.springreacttemplate.services.RegistrationService;
 import com.yaphet.springreacttemplate.models.AppUser;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("account")
 public class RegistrationController {
