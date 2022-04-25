@@ -30,10 +30,8 @@ public class RoleController {
     public String roleList(Model model){
         List<Role> roleList=roleService.getRoleList();
         model.addAttribute("roleList",roleList);
-        return "role-list";
+        return "role/role-list";
     }
-    //TODO: role detail
-
     @GetMapping("/create")
     public String createRoleForm(Model model){
         Role role=new Role();
@@ -43,16 +41,18 @@ public class RoleController {
 
     @PostMapping("/create")
     public String createRole(@Valid @ModelAttribute Role role, BindingResult result){
-       if(result.hasErrors()){
-           return "create-role";
-       }
-       roleService.createRole(role);
+        if(result.hasErrors()){
+            return "role/create-role";
+        }
+        roleService.createRole(role);
         return "redirect:/role/index";
     }
-    @GetMapping("/delete/{id}")
-    public String deleteRole(@PathVariable("id") Long id){
-        roleService.deleteRole(id);
-        return "role-list";
+
+    @GetMapping("/detail/{id}")
+    public String roleDetail(@PathVariable("id") Long id,Model model){
+        Role role=roleService.getRoleById(id);
+        model.addAttribute("role",role);
+        return "role/role-detail";
     }
     @GetMapping("/edit/{id}")
     public String updateForm(@PathVariable("id") Long id, Model model){
@@ -74,6 +74,11 @@ public class RoleController {
             return "redirect:/role/edit/{id}";
         }
         return "redirect:/role/detail/{id}";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteRole(@PathVariable("id") Long id){
+        roleService.deleteRole(id);
+        return "role/role-list";
     }
     @GetMapping("/assign-privilege/{id}")
     public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){

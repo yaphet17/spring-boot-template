@@ -20,13 +20,13 @@ public class CustomErrorController implements ErrorController {
             Integer statusCode=Integer.valueOf(status.toString());
             if(statusCode==HttpStatus.NOT_FOUND.value()){
                 logger.warn("page not found");
-                return "error-404";
+                return "error/error-404";
             }else if(statusCode==HttpStatus.INTERNAL_SERVER_ERROR.value()){
                 logger.warn("internal server error");
-                return "error-500";
+                return "error/error-500";
             }
         }
         logger.warn("unknown error occurred error_code "+status);
-        return "error";
+        return "error/error";
     }
 }

@@ -18,7 +18,6 @@ public class RegistrationService {
 
     private final EmailValidator emailValidator;
     private final AppUserService appUserService;
-    private final RoleService roleService;
     private final AppUserRoleService appUserRoleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;

@@ -1,14 +1,18 @@
 package com.yaphet.springreacttemplate.models;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -37,8 +41,8 @@ public class AppUser {
     private String password;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dob;
-    @Transient
-    private int Age;
+//    @Transient
+//    private int Age;
     @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinTable(
             name="app_user_roles",
@@ -59,8 +63,8 @@ public class AppUser {
         this.dob = dob;
     }
 
-    private int getAge(){
-        return Period.between(dob,LocalDate.now()).getYears();
-    }
+//    private int getAge(){
+//        return Period.between(dob,LocalDate.now()).getYears();
+//    }
 
 }

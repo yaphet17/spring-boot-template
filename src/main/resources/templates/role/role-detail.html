@@ -10,12 +10,26 @@
         <span class="text-success" th:text="${success}" th:if="${success}"></span>
         <span class="alert alert-danger" th:text="${error}" th:if="${error}"></span></br>
         <a th:href="@{/role/index}" class="btn btn-info text-white">Role List</a>
+        <a th:href="@{/role/assign-privilege}" class="btn btn-info text-white">Assign Privilege</a>
         <span class="text-info">
              Role Name: <p th:text="${role.roleName}"></p>
         </span>
         <span class="text-info">
-            Roel Description: <p  th:text="${role.roleDescription}"></p>
+            Role Description: <p  th:text="${role.roleDescription}"></p>
         </span>
+        <p class="text-info">Role Privileges</p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" th:text>Privilege Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="privilege:${role.privileges}">
+                <td th:text="${privilege.privilegeName}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
 </body>

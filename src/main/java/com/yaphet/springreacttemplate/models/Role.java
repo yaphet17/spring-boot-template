@@ -1,6 +1,5 @@
 package com.yaphet.springreacttemplate.models;
 
-import com.yaphet.springreacttemplate.models.Privilege;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +9,9 @@ import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name="app_roles")
 public class Role {
@@ -36,6 +35,7 @@ public class Role {
     public Role(String roleName,String roleDescription){
         this.roleName=roleName;
         this.roleDescription=roleDescription;
+
     }
 
 

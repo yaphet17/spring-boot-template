@@ -16,6 +16,10 @@ public class RegistrationController {
 
     private final RegistrationService appUserRegistrationService;
 
+    @GetMapping("/home")
+    public String home(){
+        return "registration/home";
+    }
     @GetMapping("/register")
     public String registerForm(Model model){
         AppUser appUser=new AppUser();
@@ -35,9 +39,6 @@ public class RegistrationController {
         appUserRegistrationService.confirmToken(token);
         return "registration/email-verified";
     }
-    @GetMapping("/home")
-    public String home(){
-        return "registration/home";
-    }
+
 
 }

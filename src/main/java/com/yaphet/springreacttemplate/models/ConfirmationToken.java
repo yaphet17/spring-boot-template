@@ -1,10 +1,10 @@
 package com.yaphet.springreacttemplate.models;
 
-import com.yaphet.springreacttemplate.models.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

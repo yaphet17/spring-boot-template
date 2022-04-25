@@ -22,7 +22,6 @@ public class AppUserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
-    private final RoleService roleService;
     private ConfirmationTokenService confirmationTokenService;
     private final String USER_NOT_FOUND_MSG="user with %s not found";
 
@@ -33,8 +32,7 @@ public class AppUserService implements UserDetailsService {
         return new AppUserDetails(appUser);
     }
     public AppUser getAppUser(String email){
-        AppUser appUser=appUserRepository.findByEmail(email).orElseThrow(()->new IllegalStateException("User not found"));
-        return appUser;
+        return appUserRepository.findByEmail(email).orElseThrow(()->new IllegalStateException("User not found"));
     }
     public void saveAppUser(AppUser appUser){
         //check if email is already taken
