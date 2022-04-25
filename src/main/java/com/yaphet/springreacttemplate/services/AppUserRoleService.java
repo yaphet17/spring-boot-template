@@ -15,7 +15,7 @@ public class AppUserRoleService {
     private final RoleService roleService;
 
     public void assignRole(String email,String roleName) {
-        AppUser appUser = appUserService.getAppUser(email);
+        AppUser appUser = appUserService.getAppUserByEmail(email);
         Role role = roleService.getRoleByName(roleName);
         Set<Role> roles = appUser.getRoles();
         roles.add(role);

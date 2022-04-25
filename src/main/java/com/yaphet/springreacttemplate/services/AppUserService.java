@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,17 +28,62 @@ public class AppUserService implements UserDetailsService {
     private final String USER_NOT_FOUND_MSG="user with %s not found";
 
 
-    public AppUser getAppUser(String email){
-        return appUserRepository.findByEmail(email).orElseThrow(()->new IllegalStateException("User not found"));
+    public List<AppUser> getAppUsers() {
+        return appUserRepository.findAll();
     }
-    public void saveAppUser(AppUser appUser){
+    public AppUser getAppUser(Long id){
+        return appUserRepository.findById(id).orElseThrow(()->new IllegalStateException("User not found with id="+id));
+    }
+    public AppUser getAppUserByEmail(String email){
+        return appUserRepository.findByEmail(email).orElseThrow(()->new IllegalStateException("User not found with email="+email));
+    }
+    public void save(AppUser appUser){
         //check if email is already taken
         boolean isEmailTaken=appUserRepository.findByEmail(appUser.getEmail()).isPresent();
         if(isEmailTaken){
             throw new IllegalStateException("Email already taken");
         }
+        String encodedPassword=passwordEncoder.encode(appUser.getPassword());
+        appUser.setPassword(encodedPassword);
+        appUser.setEnabled(true);
         appUserRepository.save(appUser);
     }
+    @Transactional
+    public void update(AppUser au) {
+        boolean updated=false;
+        AppUser appUser =appUserRepository.findById(au.getId()).orElseThrow(()->new IllegalStateException("student not found with id "+au.getId()));
+        if(au.getFirstName()!=null&&
+                au.getFirstName().length()>0&&
+                !Objects.equals(appUser.getFirstName(),au.getFirstName())){
+            appUser.setFirstName(au.getFirstName());
+            updated=true;
+        }
+        if(au.getLastName()!=null&&
+                au.getLastName().length()>0&&
+                !Objects.equals(appUser.getLastName(),au.getLastName())){
+            appUser.setLastName(au.getLastName());
+            updated=true;
+        }
+        if(au.getEmail()!=null&&
+                au.getEmail().length()>0&&
+                !Objects.equals(appUser.getEmail(),au.getEmail())){
+            Optional<AppUser> appUserOptional=appUserRepository.findByEmail(au.getEmail());
+            if(appUserOptional.isPresent()){
+                throw new IllegalStateException("email already exists");
+            }
+            appUser.setEmail(au.getEmail());
+            updated=true;
+        }
+    }
+
+    public void delete(Long id) {
+        boolean userExists=appUserRepository.findById(id).isPresent();
+        if(!userExists){
+            throw new IllegalStateException("user not found with id="+id);
+        }
+        appUserRepository.deleteById(id);
+    }
+
     @Transactional
     public void updateAppUserRole(AppUser appUser){
         AppUser tempAppUser=appUserRepository.findByEmail(appUser.getEmail()).orElseThrow(()->new IllegalStateException("User not found"));
@@ -57,7 +104,7 @@ public class AppUserService implements UserDetailsService {
         //hash password
         String encodedPassword=passwordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
-        saveAppUser(appUser);
+        save(appUser);
         String token= UUID.randomUUID().toString();
         ConfirmationToken confirmationToken=new ConfirmationToken(token,
                 LocalDateTime.now(),LocalDateTime.now().plusMinutes(15),
@@ -73,5 +120,6 @@ public class AppUserService implements UserDetailsService {
         }
         appUserRepository.enableAppUser(email);
     }
+
 
 }

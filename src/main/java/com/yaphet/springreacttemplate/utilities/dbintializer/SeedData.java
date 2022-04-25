@@ -46,11 +46,10 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
         adminAppUser.setFirstName("admin");
         adminAppUser.setLastName("admin");
         adminAppUser.setEmail("admin@admin.com");
-        adminAppUser.setPassword(bCryptPasswordEncoder.encode("admin"));
-        adminAppUser.setEnabled(true);
+        adminAppUser.setPassword("admin");
         adminAppUser.setDob(LocalDate.now());
 
-        appUserService.saveAppUser(adminAppUser);
+        appUserService.save(adminAppUser);
         //create default roles
         List<Role> roles=new ArrayList<>();
         roles.add(new Role("SUPER_ADMIN","Global access"));
