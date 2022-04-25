@@ -2,7 +2,6 @@ package com.yaphet.springreacttemplate.appuser;
 
 import com.yaphet.springreacttemplate.appuserregistration.token.ConfirmationToken;
 import com.yaphet.springreacttemplate.appuserregistration.token.ConfirmationTokenService;
-import com.yaphet.springreacttemplate.role.Role;
 import com.yaphet.springreacttemplate.role.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -54,14 +52,7 @@ public class AppUserService implements UserDetailsService {
         }
         appUserRepository.save(appUser);
     }
-    public void assignRole(String email,String roleName) {
-        AppUser appUser = getAppUser(email);
-        Role role = roleService.getRoleByName(roleName);
-        Set<Role> roles = appUser.getRoles();
-        roles.add(role);
-        appUser.setRoles(roles);
-        updateAppUserRole(appUser);
-    }
+
 
     public String signUpUser(AppUser appUser){
 

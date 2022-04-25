@@ -3,6 +3,7 @@ package com.yaphet.springreacttemplate.role;
 import com.yaphet.springreacttemplate.privilege.Privilege;
 import com.yaphet.springreacttemplate.privilege.PrivilegeService;
 import com.yaphet.springreacttemplate.privilege.SelectPrivilege;
+import com.yaphet.springreacttemplate.roleprivilege.RolePrivilegeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,8 @@ public class RoleController {
 
     private final RoleService roleService;
     private final PrivilegeService privilegeService;
+
+    private final RolePrivilegeService rolePrivilegeService;
 
     @GetMapping("/index")
     public String roleList(Model model){
@@ -85,11 +88,12 @@ public class RoleController {
             redirectAttr.addAttribute("error","failed to assign privilege to "+role.getRoleName()+" role");
             return "redirect:assign-privilege/"+role.getId();
         }
-        roleService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
+        rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
         redirectAttr.addAttribute("id",role.getId());
         redirectAttr.addAttribute("success","privilege successfully assigned");
         return "redirect:/role/detail/{id}";
     }
+
 
 
 }

@@ -1,9 +1,8 @@
 package com.yaphet.springreacttemplate.privilege;
 
-import com.yaphet.springreacttemplate.role.Role;
-import com.yaphet.springreacttemplate.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 @RequiredArgsConstructor
 @Service
@@ -13,7 +12,6 @@ public class PrivilegeService {
     }
 
     private final PrivilegeRepository privilegeRepository;
-    private final RoleService roleService;
 
     public Privilege getPrivilegeByName(String privilegeName){
         return privilegeRepository.findByPrivilegeName(privilegeName).orElseThrow(()->new IllegalStateException("Privilege not found with name"+privilegeName));

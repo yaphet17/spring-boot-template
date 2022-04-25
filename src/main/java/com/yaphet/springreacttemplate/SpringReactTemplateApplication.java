@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
                 "com.yaphet.springreacttemplate.security",
                 "com.yaphet.springreacttemplate.role",
                 "com.yaphet.springreacttemplate.privilege",
+                "com.yaphet.springreacttemplate.roleprivilege",
+                "com.yaphet.springreacttemplate.appuserrole"
 
         })
 public class SpringReactTemplateApplication {

@@ -2,10 +2,12 @@ package com.yaphet.springreacttemplate.dbintializer;
 
 import com.yaphet.springreacttemplate.appuser.AppUser;
 import com.yaphet.springreacttemplate.appuser.AppUserService;
+import com.yaphet.springreacttemplate.appuserrole.AppUserRoleService;
 import com.yaphet.springreacttemplate.privilege.Privilege;
 import com.yaphet.springreacttemplate.privilege.PrivilegeService;
 import com.yaphet.springreacttemplate.role.Role;
 import com.yaphet.springreacttemplate.role.RoleService;
+import com.yaphet.springreacttemplate.roleprivilege.RolePrivilegeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -24,7 +26,9 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
     boolean alreadySetup=false;
     private final AppUserService appUserService;
     private final RoleService roleService;
+    private final AppUserRoleService appUserRoleService;
     private final PrivilegeService privilegeService;
+    private final RolePrivilegeService rolePrivilegeService;
 
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -72,9 +76,9 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
             privilegeService.create(privilege);
         }
         //assign privileges to super_admin role;
-        roleService.assignPrivilege(privileges,"SUPER_ADMIN");
+        rolePrivilegeService.assignPrivilege(privileges,"SUPER_ADMIN");
         //assign super admin role
-        appUserService.assignRole(adminAppUser.getEmail(),"SUPER_ADMIN");
+        appUserRoleService.assignRole(adminAppUser.getEmail(),"SUPER_ADMIN");
 
         alreadySetup=true;
 

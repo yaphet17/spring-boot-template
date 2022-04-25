@@ -4,6 +4,7 @@ import com.yaphet.springreacttemplate.appuser.AppUser;
 import com.yaphet.springreacttemplate.appuser.AppUserService;
 import com.yaphet.springreacttemplate.appuserregistration.token.ConfirmationToken;
 import com.yaphet.springreacttemplate.appuserregistration.token.ConfirmationTokenService;
+import com.yaphet.springreacttemplate.appuserrole.AppUserRoleService;
 import com.yaphet.springreacttemplate.email.EmailService;
 import com.yaphet.springreacttemplate.role.RoleService;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class AppUserRegistrationService {
     private final EmailValidator emailValidator;
     private final AppUserService appUserService;
     private final RoleService roleService;
+    private final AppUserRoleService appUserRoleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;
     public void register(AppUser appUser) {
@@ -30,7 +32,7 @@ public class AppUserRegistrationService {
         }
         String token= appUserService.signUpUser(appUser);
         //assign default role to new user
-        appUserService.assignRole(appUser.getEmail(),"USER");
+        appUserRoleService.assignRole(appUser.getEmail(),"USER");
         String link="http://10.240.72.11:8080/user/confirm?token="+token;
         emailSender.send(appUser.getEmail(),buildEmail(appUser.getFirstName()+" "+appUser.getLastName(),link));
     }

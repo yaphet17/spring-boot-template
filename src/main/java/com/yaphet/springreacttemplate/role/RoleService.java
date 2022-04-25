@@ -2,7 +2,6 @@ package com.yaphet.springreacttemplate.role;
 
 import com.yaphet.springreacttemplate.appuser.AppUser;
 import com.yaphet.springreacttemplate.appuser.AppUserService;
-import com.yaphet.springreacttemplate.privilege.Privilege;
 import com.yaphet.springreacttemplate.privilege.PrivilegeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,7 @@ import java.util.Set;
 @Service
 public class RoleService {
     private final RoleRepository roleRepository;
-    private final PrivilegeService privilegeService;
-    private final AppUserService  appUserService;
+
     public List<Role> getRoleList() {
         return roleRepository.findAll();
     }
@@ -60,25 +58,8 @@ public class RoleService {
         }
         return isUpdated;
     }
-    public void assignPrivilege(List<Privilege> privileges, String roleName) {
-        Role role=getRoleByName(roleName);
-        Set<Privilege> rolePrivileges=role.getPrivileges();
-        for(Privilege privilege:privileges){
-            if(privilegeService.getPrivilegeByName(privilege.getPrivilegeName())!=null){
-                rolePrivileges.add(privilege);
-            }
-        }
-        role.setPrivileges(rolePrivileges);
-        updateRolePrivilege(role);
-    }
-    @Transactional
-    public void updateRolePrivilege(Role role){
-        Role tempRole=roleRepository.findById(role.getId()).orElseThrow(()->new IllegalStateException("Role not found with id="+1));
-        if(Objects.equals(role.getPrivileges(),tempRole.getPrivileges())){
-            return;
-        }
-        roleRepository.save(role);
-    }
+
+
 
 
 }
