@@ -74,6 +74,9 @@ public class AppUserService implements UserDetailsService {
             appUser.setEmail(au.getEmail());
             updated=true;
         }
+        if(updated){
+            appUserRepository.save(au);
+        }
     }
 
     public void delete(Long id) {

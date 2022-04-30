@@ -46,9 +46,9 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
         adminAppUser.setFirstName("admin");
         adminAppUser.setLastName("admin");
         adminAppUser.setEmail("admin@admin.com");
+        adminAppUser.setUserName("admin@admin.com");
         adminAppUser.setPassword("admin");
         adminAppUser.setDob(LocalDate.now());
-
         appUserService.save(adminAppUser);
         //create default roles
         List<Role> roles=new ArrayList<>();

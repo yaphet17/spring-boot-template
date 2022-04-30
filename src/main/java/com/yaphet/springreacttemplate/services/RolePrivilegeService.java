@@ -26,7 +26,8 @@ public class RolePrivilegeService {
     public void updateRolePrivilege(Role role){
         Role tempRole=roleService.getRoleById(role.getId());
         if(Objects.equals(role.getPrivileges(),tempRole.getPrivileges())){
-            throw new IllegalStateException("No change found on role privileges");
+//            throw new IllegalStateException("No change found on role privileges");
+            //TODO: handle no change update
         }
         roleService.update(role);
     }

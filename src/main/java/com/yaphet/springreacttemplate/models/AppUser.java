@@ -41,8 +41,6 @@ public class AppUser {
     private String password;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dob;
-//    @Transient
-//    private int Age;
     @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinTable(
             name="app_user_roles",
@@ -51,7 +49,7 @@ public class AppUser {
     )
     private Set<Role> roles=new HashSet<>();
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt=LocalDateTime.now();
     private Boolean enabled = false;
     private Boolean locked = false;
 
@@ -63,8 +61,11 @@ public class AppUser {
         this.dob = dob;
     }
 
-//    private int getAge(){
-//        return Period.between(dob,LocalDate.now()).getYears();
-//    }
+    public String getUserName() {
+        return email;
+    }
 
+    public void setUserName(String email) {
+        this.userName = email;
+    }
 }

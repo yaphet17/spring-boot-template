@@ -19,9 +19,10 @@ public class AppUserController {
     private final AppUserService appUserService;
 
     @GetMapping
-    public List<AppUser> getAppUsers(){
+    public String getAppUsers(Model model){
         List<AppUser> appUserList=appUserService.getAppUsers();
-        return appUserList;
+        model.addAttribute("appUserList",appUserList);
+        return "appuser/appuser-list";
     }
     @GetMapping("/create")
     public String createForm(Model model){
