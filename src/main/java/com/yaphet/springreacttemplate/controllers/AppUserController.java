@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -41,13 +40,13 @@ public class AppUserController {
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute AppUser appUser,@Valid @ModelAttribute SelectedRole selectedRole,BindingResult result, RedirectAttributes redirectAttr){
         if(result.hasErrors()){
-            redirectAttr.addAttribute("error","failed to create user");
-            return "redirect:/create";
+            return "redirect:appuser/create";
         }
-        appUser.setRoles(selectedRole.selectedRoles.stream().collect(Collectors.toSet()));
+        appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
         appUserService.save(appUser);
-        redirectAttr.addAttribute("success","user successfully updated");
-        return "redirect:/user/detail";
+        Long id=appUserService.getAppUserByEmail(appUser.getEmail()).getId();
+        redirectAttr.addAttribute("id",id);
+        return "redirect:/user/detail/{id}";
     }
     @GetMapping("/detail/{id}")
     public String getAppUser(@PathVariable("id") Long id,Model model){
@@ -64,19 +63,37 @@ public class AppUserController {
     }
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute AppUser appUSer,BindingResult result,RedirectAttributes redirectAttr){
+        redirectAttr.addAttribute("id",appUSer.getId());
         if(result.hasErrors()){
-            redirectAttr.addAttribute("id",appUSer.getId());
-            redirectAttr.addAttribute("error","failed to update user");
-            return "redirect:/update/{id}";
+            return "redirect:/update";
         }
         appUserService.update(appUSer);
-        redirectAttr.addAttribute("success","user successfully update");
-        return "redirect:/user/detail";
+        return "redirect:/user/detail/{id}";
     }
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id){
         appUserService.delete(id);
         return "redirect:/user";
+    }
+
+    @GetMapping("/assign-role/{id}")
+    public String assignRoleForm(@PathVariable("id") Long id,Model model){
+        AppUser appUser=appUserService.getAppUser(id);
+        List<Role> roleList=roleService.getRoleList();
+        model.addAttribute("appUser",appUser);
+        model.addAttribute("selectedRole",new SelectedRole(roleList));
+        return "appuser/assign-role";
+    }
+    @PostMapping("/assign-role")
+    public String assignRole(@RequestParam("id") Long id,@Valid @ModelAttribute SelectedRole selectedRoles,BindingResult result,RedirectAttributes redirectAttributes){
+        AppUser appUser=appUserService.getAppUser(id);
+        redirectAttributes.addAttribute("id",id);
+        if(result.hasErrors()){
+            return "redirect:appuser/assign-role/{id}";
+        }
+        appUser.setRoles(new HashSet<>(selectedRoles.getSelectedRoles()));
+        appUserService.updateAppUserRole(appUser);
+        return "redirect:user/detail/{id}";
     }
 
 

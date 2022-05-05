@@ -24,6 +24,7 @@
             <td th:text="${user.createdAt}"></td>
             <td>
                 <a th:href="@{/user/edit/{id}(id=${user.id})}" class="btn btn-primary">Edit</a>
+                <a th:href="@{/user/assign-role/{id}(id=${user.id})}" class="btn btn-primary">Assign Role</a>
                 <a th:href="@{/user/delete/{id}(id=${user.id})}" class="btn btn-primary">Delete</a>
             </td>
         </tr>
