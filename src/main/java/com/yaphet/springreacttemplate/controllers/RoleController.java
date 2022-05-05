@@ -92,13 +92,11 @@ public class RoleController {
     public String assignPrivilege(@RequestParam("id") Long id,@Valid @ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
                                   RedirectAttributes redirectAttr){
         Role role=roleService.getRoleById(id);
+        redirectAttr.addAttribute("id",role.getId());
         if(result.hasErrors()){
-            redirectAttr.addAttribute("error",String.format("failed to assign privilege to %s role",role.getRoleName()));
-            return "redirect:assign-privilege/"+role.getId();
+            return "redirect:assign-privilege/";
         }
         rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
-        redirectAttr.addAttribute("id",role.getId());
-        redirectAttr.addAttribute("success","privilege successfully assigned");
         return "redirect:/role/detail/{id}";
     }
 

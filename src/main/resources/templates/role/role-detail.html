@@ -10,7 +10,7 @@
         <span class="text-success" th:text="${success}" th:if="${success}"></span>
         <span class="alert alert-danger" th:text="${error}" th:if="${error}"></span></br>
         <a th:href="@{/role}" class="btn btn-info text-white">Role List</a>
-        <a th:href="@{/role/assign-privilege}" class="btn btn-info text-white">Assign Privilege</a>
+        <a th:href="@{/role/assign-privilege/{id}(id=${role.id})}" class="btn btn-info text-white">Assign Privilege</a>
         <span class="text-info">
              Role Name: <p th:text="${role.roleName}"></p>
         </span>
