@@ -82,17 +82,18 @@ public class RoleController {
     }
     @GetMapping("/assign-privilege/{id}")
     public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){
-        Role role=roleService.getRoleById(id);
+         Role role=roleService.getRoleById(id);
         List<Privilege> privilegeList=privilegeService.getAllPrivileges();
         model.addAttribute("role",role);
         model.addAttribute("selectedPrivilege",new SelectPrivilege(privilegeList));
         return "role/assign-privilege";
     }
     @PostMapping("/assign-privilege")
-    public String assignPrivilege(@ModelAttribute Role role,@ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
+    public String assignPrivilege(@RequestParam("id") Long id,@Valid @ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
                                   RedirectAttributes redirectAttr){
+        Role role=roleService.getRoleById(id);
         if(result.hasErrors()){
-            redirectAttr.addAttribute("error","failed to assign privilege to "+role.getRoleName()+" role");
+            redirectAttr.addAttribute("error",String.format("failed to assign privilege to %s role",role.getRoleName()));
             return "redirect:assign-privilege/"+role.getId();
         }
         rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
