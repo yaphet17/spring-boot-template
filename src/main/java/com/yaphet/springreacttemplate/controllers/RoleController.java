@@ -45,7 +45,7 @@ public class RoleController {
             return "role/create-role";
         }
         roleService.createRole(role);
-        return "redirect:/role/index";
+        return "redirect:/role";
     }
 
     @GetMapping("/detail/{id}")
@@ -78,7 +78,7 @@ public class RoleController {
     @GetMapping("/delete/{id}")
     public String deleteRole(@PathVariable("id") Long id){
         roleService.deleteRole(id);
-        return "role/role-list";
+        return "redirect:/role/";
     }
     @GetMapping("/assign-privilege/{id}")
     public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){
@@ -94,7 +94,7 @@ public class RoleController {
         Role role=roleService.getRoleById(id);
         redirectAttr.addAttribute("id",role.getId());
         if(result.hasErrors()){
-            return "redirect:assign-privilege/";
+            return "redirect:/role/assign-privilege/{id}";
         }
         rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
         return "redirect:/role/detail/{id}";

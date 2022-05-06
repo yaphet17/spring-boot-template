@@ -29,7 +29,7 @@ public class RegistrationService {
         String token= appUserService.signUpUser(appUser);
         //assign default role to new user
         appUserRoleService.assignRole(appUser.getEmail(),"USER");
-        String link="http://10.240.72.11:8080/user/confirm?token="+token;
+        String link="http://10.240.73.32:8080/account/confirm?token="+token;
         emailSender.send(appUser.getEmail(),buildEmail(appUser.getFirstName()+" "+appUser.getLastName(),link));
     }
     @Transactional

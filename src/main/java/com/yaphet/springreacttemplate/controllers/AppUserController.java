@@ -40,7 +40,7 @@ public class AppUserController {
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute AppUser appUser,@Valid @ModelAttribute SelectedRole selectedRole,BindingResult result, RedirectAttributes redirectAttr){
         if(result.hasErrors()){
-            return "redirect:appuser/create";
+            return "redirect:user/create";
         }
         appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
         appUserService.save(appUser);
@@ -65,7 +65,7 @@ public class AppUserController {
     public String update(@Valid @ModelAttribute AppUser appUSer,BindingResult result,RedirectAttributes redirectAttr){
         redirectAttr.addAttribute("id",appUSer.getId());
         if(result.hasErrors()){
-            return "redirect:/update";
+            return "redirect:/user/update";
         }
         appUserService.update(appUSer);
         return "redirect:/user/detail/{id}";
@@ -89,11 +89,11 @@ public class AppUserController {
         AppUser appUser=appUserService.getAppUser(id);
         redirectAttributes.addAttribute("id",id);
         if(result.hasErrors()){
-            return "redirect:appuser/assign-role/{id}";
+            return "redirect: user/assign-role/{id}";
         }
         appUser.setRoles(new HashSet<>(selectedRoles.getSelectedRoles()));
         appUserService.updateAppUserRole(appUser);
-        return "redirect:user/detail/{id}";
+        return "redirect: user/detail/{id}";
     }
 
 
