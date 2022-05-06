@@ -12,18 +12,22 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("account")
+@RequestMapping("")
 public class RegistrationController {
 
     private final RegistrationService appUserRegistrationService;
 
-    @GetMapping("/register")
+    @GetMapping
+    public String index(){
+        return "landing-page";
+    }
+    @GetMapping("account/register")
     public String registrationForm(Model model){
         AppUser appUser=new AppUser();
         model.addAttribute("appUser",appUser);
         return "registration/register-user";
     }
-    @PostMapping("/register")
+    @PostMapping("account/register")
     public String register(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result){
         if(result.hasErrors()){
             return "registration/register-user";
@@ -31,7 +35,7 @@ public class RegistrationController {
         appUserRegistrationService.register(appUser);
         return "redirect:/login";
     }
-    @GetMapping("/confirm")
+    @GetMapping("account/confirm")
     public String confirm(@RequestParam("token") String token){
         appUserRegistrationService.confirmToken(token);
         return "registration/email-verified";
