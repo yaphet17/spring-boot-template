@@ -52,6 +52,8 @@ public class AppUser {
     private LocalDateTime createdAt=LocalDateTime.now();
     private Boolean enabled = false;
     private Boolean locked = false;
+    private Boolean deleted=false;
+
 
     public AppUser(String firstName, String lastName, String email, String password, LocalDate dob) {
         this.firstName = firstName;

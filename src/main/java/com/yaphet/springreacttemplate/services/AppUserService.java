@@ -29,10 +29,10 @@ public class AppUserService implements UserDetailsService {
 
 
     public List<AppUser> getAppUsers() {
-        return appUserRepository.findAll();
+        return appUserRepository.findAllUndeleted();
     }
     public AppUser getAppUser(Long id){
-        return appUserRepository.findById(id).orElseThrow(()->new IllegalStateException("User not found with id="+id));
+        return appUserRepository.findByIdUndeleted(id).orElseThrow(()->new IllegalStateException("User not found with id="+id));
     }
     public AppUser getAppUserByEmail(String email){
         return appUserRepository.findByEmail(email).orElseThrow(()->new IllegalStateException("User not found with email="+email));
@@ -51,7 +51,7 @@ public class AppUserService implements UserDetailsService {
     @Transactional
     public void update(AppUser au) {
         boolean updated=false;
-        AppUser appUser =appUserRepository.findById(au.getId()).orElseThrow(()->new IllegalStateException("student not found with id "+au.getId()));
+        AppUser appUser =appUserRepository.findByIdUndeleted(au.getId()).orElseThrow(()->new IllegalStateException("student not found with id "+au.getId()));
         if(au.getFirstName()!=null&&
                 au.getFirstName().length()>0&&
                 !Objects.equals(appUser.getFirstName(),au.getFirstName())){
@@ -80,11 +80,11 @@ public class AppUserService implements UserDetailsService {
     }
 
     public void delete(Long id) {
-        boolean userExists=appUserRepository.findById(id).isPresent();
+        boolean userExists=appUserRepository.findByIdUndeleted(id).isPresent();
         if(!userExists){
             throw new IllegalStateException("user not found with id="+id);
         }
-        appUserRepository.deleteById(id);
+        appUserRepository.deleteAppUser(id);
     }
 
     @Transactional
