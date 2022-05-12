@@ -21,13 +21,13 @@ public class RegistrationController {
     public String index(){
         return "landing-page";
     }
-    @GetMapping("account/register")
+    @GetMapping("/register")
     public String registrationForm(Model model){
         AppUser appUser=new AppUser();
         model.addAttribute("appUser",appUser);
         return "registration/register-user";
     }
-    @PostMapping("account/register")
+    @PostMapping("/register")
     public String register(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result){
         if(result.hasErrors()){
             return "registration/register-user";
@@ -35,7 +35,7 @@ public class RegistrationController {
         appUserRegistrationService.register(appUser);
         return "redirect:/login";
     }
-    @GetMapping("account/confirm")
+    @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token){
         appUserRegistrationService.confirmToken(token);
         return "registration/email-verified";
