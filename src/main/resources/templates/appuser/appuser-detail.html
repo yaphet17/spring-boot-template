@@ -26,6 +26,10 @@
     <span class="text-info">
            Create At: <p  th:text="${appUser.createdAt}"></p>
     </span>
+    <span class="text-info">
+           Email Verification: <p  th:if="${appUser.enable==true}"></p>
+    </span>
+
     <p class="text-info">User Roles</p>
     <span class="text-info" th:each="role:${appUser.roles}" th:text="${role.roleName}"></span>
 </div>
