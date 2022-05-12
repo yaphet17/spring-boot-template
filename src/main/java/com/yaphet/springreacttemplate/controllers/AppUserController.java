@@ -55,21 +55,6 @@ public class AppUserController {
         return "/appuser/appuser-detail";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable("id") Long id,Model model){
-        AppUser appUser=appUserService.getAppUser(id);
-        model.addAttribute("appUser",appUser);
-        return "/appuser/appuser-update";
-    }
-    @PostMapping("/update")
-    public String update(@Valid @ModelAttribute AppUser appUSer,BindingResult result,RedirectAttributes redirectAttr){
-        redirectAttr.addAttribute("id",appUSer.getId());
-        if(result.hasErrors()){
-            return "redirect:/user/update";
-        }
-        appUserService.update(appUSer);
-        return "redirect:/user/detail/{id}";
-    }
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id){
         appUserService.delete(id);

@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container">
-    <form action="#" th:action="@{/register}" th:object="${appUser}" method="POST">
+    <form action="#" th:action="@{/profile/update}" th:object="${appUser}" method="POST">
         <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
             <input type="text" th:field="*{firstName}" name="firstName" class="form-control" id="firstName" >
@@ -22,12 +22,7 @@
             <input type="email" th:field="*{email}" name="email" class="form-control" id="email">
             <p class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errorClass="error" th:errors="*{email}"/>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" th:field="*{password}" name="password" class="form-control" id="password">
-            <p class="alert alert-warning" th:if="${#fields.hasErrors('password')}" th:errorClass="error" th:errors="*{password}"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
 </body>
