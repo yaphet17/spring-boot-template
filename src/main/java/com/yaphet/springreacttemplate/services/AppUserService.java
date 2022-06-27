@@ -84,7 +84,7 @@ public class AppUserService implements UserDetailsService {
                 !Objects.equals(appUser.getEmail(), email)){
             appUserRepository
                     .findByEmail(au.getEmail())
-                    .orElseThrow(() -> new EmailAlreadyTakenException("email already exists"));
+                    .orElseThrow(() -> new EmailAlreadyTakenException(email));
             appUser.setEmail(email);
             updated = true;
         }
