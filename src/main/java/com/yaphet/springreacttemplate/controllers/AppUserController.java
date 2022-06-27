@@ -43,8 +43,8 @@ public class AppUserController {
             return "redirect:user/create";
         }
         appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
-        appUserService.save(appUser);
-        Long id=appUserService.getAppUserByEmail(appUser.getEmail()).getId();
+        appUserService.saveAppUser(appUser);
+        Long id=appUserService.getAppUser(appUser.getEmail()).getId();
         redirectAttr.addAttribute("id",id);
         return "redirect:/user/detail/{id}";
     }
@@ -57,7 +57,7 @@ public class AppUserController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id){
-        appUserService.delete(id);
+        appUserService.deleteAppUser(id);
         return "redirect:/user";
     }
 

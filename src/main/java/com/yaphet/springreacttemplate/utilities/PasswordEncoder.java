@@ -1,4 +1,4 @@
-package com.yaphet.springreacttemplate.utilities.security;
+package com.yaphet.springreacttemplate.utilities;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

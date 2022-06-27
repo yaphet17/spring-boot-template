@@ -14,13 +14,14 @@ public class ProfileService {
 
     public boolean changePassword(Long id,String oldPassword,String newPassword ){
         AppUser appUser=appUserService.getAppUser(id);
-        if(passwordEncoder.matches(oldPassword,appUser.getPassword())){
-            String encodedNewPassword=passwordEncoder.encode(newPassword);
-            appUser.setPassword(encodedNewPassword);
-            appUserService.update(appUser);
-            return true;
-        }
 
-        return false;
+        if(!passwordEncoder.matches(oldPassword,appUser.getPassword())){
+            return false;
+
+        }
+        String encodedNewPassword=passwordEncoder.encode(newPassword);
+        appUser.setPassword(encodedNewPassword);
+        appUserService.updateAppUser(appUser);
+        return true;
     }
 }

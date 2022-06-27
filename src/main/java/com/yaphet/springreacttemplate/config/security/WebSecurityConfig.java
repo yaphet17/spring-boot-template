@@ -1,4 +1,4 @@
-package com.yaphet.springreacttemplate.utilities.security.config;
+package com.yaphet.springreacttemplate.config.security;
 
 import com.yaphet.springreacttemplate.services.AppUserService;
 import lombok.AllArgsConstructor;
