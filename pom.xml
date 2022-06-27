@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.yaphet</groupId>
-    <artifactId>spring-react-template</artifactId>
+    <artifactId>spring-template</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-react-template</name>
-    <description>spring-react-template</description>
+    <name>spring-template</name>
+    <description>spring-template</description>
     <properties>
         <java.version>17</java.version>
     </properties>
