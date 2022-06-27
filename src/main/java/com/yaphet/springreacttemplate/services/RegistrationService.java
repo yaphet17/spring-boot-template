@@ -1,19 +1,23 @@
 package com.yaphet.springreacttemplate.services;
 
+import com.yaphet.springreacttemplate.exceptions.EmailAlreadyConfirmedException;
+import com.yaphet.springreacttemplate.exceptions.InvalidEmailException;
+import com.yaphet.springreacttemplate.exceptions.TokenExpiredException;
+import com.yaphet.springreacttemplate.exceptions.TokenNotFoundException;
 import com.yaphet.springreacttemplate.utilities.email.EmailValidator;
 import com.yaphet.springreacttemplate.models.AppUser;
 import com.yaphet.springreacttemplate.models.ConfirmationToken;
 import com.yaphet.springreacttemplate.utilities.email.EmailService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
-
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class RegistrationService {
 
     private final EmailValidator emailValidator;
@@ -21,30 +25,41 @@ public class RegistrationService {
     private final AppUserRoleService appUserRoleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;
+    @Value("app-react-template.base-url")
+    private final String BASE_URL;
+
     public void register(AppUser appUser) {
-        boolean isEmailValid=emailValidator.test(appUser.getEmail());
+        String email = appUser.getEmail();
+        boolean isEmailValid = emailValidator.test(email);
+
         if(!isEmailValid){
-            throw new IllegalStateException("Invalid email address");
+            throw new InvalidEmailException(email);
         }
-        String token= appUserService.signUpUser(appUser);
+        String token = appUserService.signUpUser(appUser);
         //assign default role to new user
         appUserRoleService.assignRole(appUser.getEmail(),"USER");
-        String link="http://10.240.73.32:8080/account/confirm?token="+token;
-        emailSender.send(appUser.getEmail(),buildEmail(appUser.getFirstName()+" "+appUser.getLastName(),link));
+        String link = BASE_URL+ "/account/confirm?token="+token;
+        emailSender.send(
+                appUser.getEmail(),
+                buildEmail(appUser.getFirstName() + " "+appUser.getLastName(), link)
+        );
     }
+
     @Transactional
     public void confirmToken(@RequestParam("token") String token){
-        ConfirmationToken confirmationToken=confirmationTokenService.getToken(token).orElseThrow(()->new IllegalStateException("token not found"));
-        if(confirmationToken.getConfirmedAt()!=null){
-            throw new IllegalStateException("email already confirmed");
+        ConfirmationToken confirmationToken = confirmationTokenService
+                .getToken(token)
+                .orElseThrow(TokenNotFoundException::new);
+
+        if(confirmationToken.getConfirmedAt() != null){
+            throw new EmailAlreadyConfirmedException();
         }
-        LocalDateTime expiresAt=confirmationToken.getExpiresAt();
+        LocalDateTime expiresAt = confirmationToken.getExpiresAt();
         if(expiresAt.isBefore(LocalDateTime.now())){
-            throw new IllegalStateException("token confirmed");
+            throw new TokenExpiredException(expiresAt);
         }
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(confirmationToken.getAppUser().getEmail());
-
     }
 
     private String buildEmail(String name, String link) {

@@ -1,6 +1,6 @@
 package com.yaphet.springreacttemplate.services;
 
-import com.yaphet.springreacttemplate.exceptions.EmailAlreadyTakenException;
+import com.yaphet.springreacttemplate.exceptions.EmailAlreadyExistsException;
 import com.yaphet.springreacttemplate.exceptions.EmailNotFoundException;
 import com.yaphet.springreacttemplate.exceptions.IdNotFoundException;
 import com.yaphet.springreacttemplate.utilities.AppUserDetails;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class AppUserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -50,7 +50,7 @@ public class AppUserService implements UserDetailsService {
 
         appUserRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new EmailAlreadyTakenException(email));
+                .orElseThrow(() -> new EmailAlreadyExistsException(email));
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
 
         appUser.setPassword(encodedPassword);
@@ -84,7 +84,7 @@ public class AppUserService implements UserDetailsService {
                 !Objects.equals(appUser.getEmail(), email)){
             appUserRepository
                     .findByEmail(au.getEmail())
-                    .orElseThrow(() -> new EmailAlreadyTakenException(email));
+                    .orElseThrow(() -> new EmailAlreadyExistsException(email));
             appUser.setEmail(email);
             updated = true;
         }
