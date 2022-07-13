@@ -28,7 +28,7 @@ public class RoleController {
 
     @GetMapping
     public String roleList(Model model){
-        List<Role> roleList=roleService.getRoleList();
+        List<Role> roleList=roleService.getRoles();
         model.addAttribute("roleList",roleList);
         return "role/role-list";
     }
@@ -50,13 +50,13 @@ public class RoleController {
 
     @GetMapping("/detail/{id}")
     public String roleDetail(@PathVariable("id") Long id,Model model){
-        Role role=roleService.getRoleById(id);
+        Role role=roleService.getRole(id);
         model.addAttribute("role",role);
         return "role/role-detail";
     }
     @GetMapping("/edit/{id}")
     public String updateForm(@PathVariable("id") Long id, Model model){
-        Role role=roleService.getRoleById(id);
+        Role role=roleService.getRole(id);
         model.addAttribute("role",role);
         return "role/edit-role";
     }
@@ -67,7 +67,7 @@ public class RoleController {
            return "redirect:/role/edit/{id}";
        }
         //if role is updated return success message else redirect back to update form
-        if(roleService.update(role)){
+        if(roleService.updateRole(role)){
             redirectAttr.addAttribute("success","successfully updated");
         }else{
             redirectAttr.addAttribute("error","no change found");
@@ -82,7 +82,7 @@ public class RoleController {
     }
     @GetMapping("/assign-privilege/{id}")
     public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){
-         Role role=roleService.getRoleById(id);
+         Role role=roleService.getRole(id);
         List<Privilege> privilegeList=privilegeService.getAllPrivileges();
         model.addAttribute("role",role);
         model.addAttribute("selectedPrivilege",new SelectPrivilege(privilegeList));
@@ -91,7 +91,7 @@ public class RoleController {
     @PostMapping("/assign-privilege")
     public String assignPrivilege(@RequestParam("id") Long id,@Valid @ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
                                   RedirectAttributes redirectAttr){
-        Role role=roleService.getRoleById(id);
+        Role role=roleService.getRole(id);
         redirectAttr.addAttribute("id",role.getId());
         if(result.hasErrors()){
             return "redirect:/role/assign-privilege/{id}";

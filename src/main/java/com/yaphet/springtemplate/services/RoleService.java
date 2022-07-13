@@ -16,9 +16,6 @@ import java.util.Objects;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public List<Role> getRoleList() {
-        return roleRepository.findAll();
-    }
     public void createRole(Role role) {
         String roleName = role.getRoleName();
         boolean roleExists =   roleRepository.findByRoleName(roleName).isPresent();
@@ -28,12 +25,15 @@ public class RoleService {
         }
         roleRepository.save(role);
     }
-    public Role getRoleByName(String roleName) {
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
+    }
+    public Role getRole(String roleName) {
         return roleRepository
                 .findByRoleName(roleName)
                 .orElseThrow(() -> new RoleNotFoundException(roleName));
     }
-    public Role getRoleById(Long id){
+    public Role getRole(Long id){
         return roleRepository
                 .findById(id)
                 .orElseThrow(() -> new RoleNotFoundException(id));
@@ -47,7 +47,7 @@ public class RoleService {
     }
 
     @Transactional
-    public boolean update(Role r) {
+    public boolean updateRole(Role r) {
         boolean isUpdated = false;
         Long id = r.getId();
         Role role = roleRepository
@@ -64,7 +64,7 @@ public class RoleService {
                 r.getRoleDescription().length() > 0 &&
                 !Objects.equals(r.getRoleDescription(), role.getRoleDescription())){
             role.setRoleDescription(r.getRoleDescription());
-            isUpdated=true;
+            isUpdated = true;
         }
         return isUpdated;
     }

@@ -14,9 +14,9 @@ import org.springframework.context.annotation.ComponentScan;
                 "com.yaphet.springtemplate.utilities"
 
         })
-public class SpringReactTemplateApplication {
+public class SpringTemplateApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringReactTemplateApplication.class, args);
+        SpringApplication.run(SpringTemplateApplication.class, args);
     }
 }

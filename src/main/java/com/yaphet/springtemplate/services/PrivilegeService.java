@@ -19,6 +19,15 @@ public class PrivilegeService {
 
     private final PrivilegeRepository privilegeRepository;
 
+    public void createPrivilege(Privilege privilege){
+        String privilegeName = privilege.getPrivilegeName();
+        boolean privilegeExists = privilegeRepository.findByPrivilegeName(privilegeName).isPresent();
+
+        if(privilegeExists){
+            throw new PrivilegeAlreadyExistsException(privilegeName);
+        }
+        privilegeRepository.save(privilege);
+    }
     public Privilege getPrivilege(String privilegeName){
         return privilegeRepository
                 .findByPrivilegeName(privilegeName)
@@ -30,14 +39,5 @@ public class PrivilegeService {
                 .orElseThrow(()->new IdNotFoundException("Privilege", id));
     }
 
-    public void createPrivilege(Privilege privilege){
-        String privilegeName = privilege.getPrivilegeName();
-        boolean privilegeExists = privilegeRepository.findByPrivilegeName(privilegeName).isPresent();
-
-        if(privilegeExists){
-            throw new PrivilegeAlreadyExistsException(privilegeName);
-        }
-        privilegeRepository.save(privilege);
-    }
 
 }

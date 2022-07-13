@@ -32,7 +32,7 @@ public class AppUserController {
     @GetMapping("/create")
     public String createForm(Model model){
         AppUser appUser=new AppUser();
-        List<Role> roleList=roleService.getRoleList();
+        List<Role> roleList=roleService.getRoles();
         model.addAttribute("appUser",appUser);
         model.addAttribute("selectedRole",new SelectedRole(roleList));
         return "appuser/create-appuser";
@@ -64,7 +64,7 @@ public class AppUserController {
     @GetMapping("/assign-role/{id}")
     public String assignRoleForm(@PathVariable("id") Long id,Model model){
         AppUser appUser=appUserService.getAppUser(id);
-        List<Role> roleList=roleService.getRoleList();
+        List<Role> roleList=roleService.getRoles();
         model.addAttribute("appUser",appUser);
         model.addAttribute("selectedRole",new SelectedRole(roleList));
         return "appuser/assign-role";

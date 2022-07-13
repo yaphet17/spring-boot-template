@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class AppUserRoleService {
 
     private final AppUserService appUserService;
@@ -16,7 +16,7 @@ public class AppUserRoleService {
 
     public void assignRole(String email, String roleName) {
         AppUser appUser = appUserService.getAppUser(email);
-        Role role = roleService.getRoleByName(roleName);
+        Role role = roleService.getRole(roleName);
         Set<Role> roles = appUser.getRoles();
 
         roles.add(role);

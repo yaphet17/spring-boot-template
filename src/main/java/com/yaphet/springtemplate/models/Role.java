@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,29 +12,48 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name="app_roles")
+@Table(
+        name = "role",
+        uniqueConstraints = @UniqueConstraint(
+                name = "role_unique",
+                columnNames = "role_name")
+)
 public class Role {
 
     @Id
-    @SequenceGenerator(name="role_sequence",allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="role_sequence")
+    @SequenceGenerator(
+            name = "role_sequence",
+            sequenceName = "role_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "role_sequence"
+    )
+    @Column(name = "role_id")
     private Long id;
-    @NotBlank(message="Role name required")
+    @Column(name = "role_name", nullable = false)
     private String roleName;
+    @Column(name = "role_description")
     private String roleDescription;
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name="app_role_privileges",
-            joinColumns = @JoinColumn(name="app_role_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="app_privilege_id",referencedColumnName = "id")
+            name ="role_privileges",
+            joinColumns = @JoinColumn(
+                    name ="role_id",
+                    referencedColumnName = "role_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name ="privilege_id",
+                    referencedColumnName = "privilege_id"
+            )
     )
-    private Set<Privilege> privileges=new HashSet<>();
+    private Set<Privilege> privileges = new HashSet<>();
 
-    public Role(String roleName,String roleDescription){
-        this.roleName=roleName;
-        this.roleDescription=roleDescription;
-
+    public Role(String roleName, String roleDescription){
+        this.roleName = roleName;
+        this.roleDescription = roleDescription;
     }
 
 

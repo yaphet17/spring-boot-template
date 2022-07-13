@@ -107,7 +107,7 @@ public class AppUserService implements UserDetailsService {
                 .findByEmail(appUser.getEmail())
                 .filter(user -> Objects.equals(appUser.getRoles(), user.getRoles()))
                 .map(appUserRepository::save)
-                .orElseThrow(()->new EmailNotFoundException(email));
+                .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
     @Override

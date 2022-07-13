@@ -7,8 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -18,41 +17,62 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name="app_users")
+@Table(
+        name = "app_users",
+        uniqueConstraints = @UniqueConstraint(
+                name = "email_unique",
+                columnNames = "email"
+        )
+)
 public class AppUser {
+
     @Id
-    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+    @SequenceGenerator(
+            name = "user_sequence",
+            sequenceName = "user_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_sequence"
+    )
+    @Column(name = "appuser_id")
     private Long id;
-    @NotBlank(message = "First name field required")
-    @Pattern(regexp = "^[A-Za-z]*$", message = "Invalid first name format")
-    @Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-    @NotBlank(message = "Last name field required")
-    @Pattern(regexp = "^[A-Za-z]*$", message = "Invalid last name format")
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
     private String userName;
-    @NotBlank(message = "Email field required")
     @Email
+    @Column(name = "email" ,nullable = false)
     private String email;
-    @NotBlank(message = "Password field required")
-    @Column(nullable = false)
+    @Column(name = "password" ,nullable = false)
     private String password;
+    @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dob;
-    @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name="app_user_roles",
-            joinColumns = @JoinColumn(name="app_user_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="app_role_id",referencedColumnName = "id")
+            name = "appuser_roles",
+            joinColumns = @JoinColumn(
+                    name = "appuser_id",
+                    referencedColumnName = "appuser_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id",
+                    referencedColumnName = "role_id"
+            )
     )
-    private Set<Role> roles=new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
+    @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime createdAt=LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "modified_at")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime modifiedAt = LocalDateTime.now();
     private Boolean enabled = false;
     private Boolean locked = false;
-    private Boolean deleted=false;
+    private Boolean deleted = false;
 
 
     public AppUser(String firstName, String lastName, String email, String password, LocalDate dob) {

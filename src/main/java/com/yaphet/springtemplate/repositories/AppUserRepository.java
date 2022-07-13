@@ -16,16 +16,15 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Query("SELECT a FROM AppUser a WHERE a.email=?1 AND a.deleted=FALSE ")
     Optional<AppUser> findByEmail(String email);
 
-    @Query("UPDATE AppUser SET deleted=TRUE WHERE id=?1")
-    void deleteAppUser(Long id);
-
     @Query("SELECT a FROM AppUser a WHERE a.deleted=FALSE")
     List<AppUser> findAllUndeleted();
+
     @Query("SELECT a FROM AppUser a WHERE a.id=?1 AND a.deleted=FALSE")
     Optional<AppUser> findByIdUndeleted(Long id);
 
-    boolean existsByEmail(String email);
-
+    @Modifying
+    @Query("UPDATE AppUser SET deleted=TRUE WHERE id=?1")
+    void deleteAppUser(Long id);
 
     @Modifying
     @Query("UPDATE AppUser a SET a.enabled=TRUE WHERE a.email=?1")

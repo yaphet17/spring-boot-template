@@ -12,15 +12,13 @@ public class ProfileService {
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public boolean changePassword(Long id, String oldPassword, String newPassword ){
-        AppUser appUser=appUserService.getAppUser(id);
+    public void changePassword(Long id, String oldPassword, String newPassword ){
+        AppUser appUser = appUserService.getAppUser(id);
 
-        if(!passwordEncoder.matches(oldPassword,appUser.getPassword())){
-            return false;
+        if(!passwordEncoder.matches(oldPassword, appUser.getPassword())){
+            return;
         }
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
-        appUser.setPassword(encodedNewPassword);
+        appUser.setPassword(passwordEncoder.encode(newPassword));
         appUserService.updateAppUser(appUser);
-        return true;
     }
 }

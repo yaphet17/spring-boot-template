@@ -4,12 +4,11 @@ import com.yaphet.springtemplate.exceptions.EmailAlreadyConfirmedException;
 import com.yaphet.springtemplate.exceptions.InvalidEmailException;
 import com.yaphet.springtemplate.exceptions.TokenExpiredException;
 import com.yaphet.springtemplate.exceptions.TokenNotFoundException;
-import com.yaphet.springtemplate.utilities.email.EmailValidator;
 import com.yaphet.springtemplate.models.AppUser;
 import com.yaphet.springtemplate.models.ConfirmationToken;
 import com.yaphet.springtemplate.utilities.email.EmailService;
+import com.yaphet.springtemplate.utilities.email.EmailValidator;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,8 +16,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
-@Service
 @AllArgsConstructor
+@Service
 public class RegistrationService {
 
     private final EmailValidator emailValidator;
@@ -26,7 +25,7 @@ public class RegistrationService {
     private final AppUserRoleService appUserRoleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;
-    private final String BASE_URL= new Properties().getProperty(
+    private final String BASE_URL = new Properties().getProperty(
             "app-react-template.base-url",
             "http://localhost");
 
