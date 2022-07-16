@@ -110,13 +110,6 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        return appUserRepository.findByEmail(email)
-                .map(AppUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
-    }
-
     public String signUpUser(AppUser appUser){
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
         String token = UUID.randomUUID().toString();
@@ -137,6 +130,11 @@ public class AppUserService implements UserDetailsService {
                .orElseThrow(() -> new EmailNotFoundException(email));
         appUserRepository.enableAppUser(email);
     }
-
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        return appUserRepository.findByEmail(email)
+                .map(AppUserDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+    }
 
 }

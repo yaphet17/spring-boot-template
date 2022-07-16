@@ -7,6 +7,7 @@ import com.yaphet.springtemplate.services.PrivilegeService;
 import com.yaphet.springtemplate.utilities.SelectPrivilege;
 import com.yaphet.springtemplate.services.RolePrivilegeService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,12 +28,14 @@ public class RoleController {
     private final RolePrivilegeService rolePrivilegeService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String roleList(Model model){
         List<Role> roleList=roleService.getRoles();
         model.addAttribute("roleList",roleList);
         return "role/role-list";
     }
     @GetMapping("/create")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String createRoleForm(Model model){
         Role role=new Role();
         model.addAttribute("role",role);
@@ -40,6 +43,7 @@ public class RoleController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String createRole(@Valid @ModelAttribute Role role, BindingResult result){
         if(result.hasErrors()){
             return "role/create-role";
@@ -49,18 +53,21 @@ public class RoleController {
     }
 
     @GetMapping("/detail/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String roleDetail(@PathVariable("id") Long id,Model model){
         Role role=roleService.getRole(id);
         model.addAttribute("role",role);
         return "role/role-detail";
     }
     @GetMapping("/edit/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String updateForm(@PathVariable("id") Long id, Model model){
         Role role=roleService.getRole(id);
         model.addAttribute("role",role);
         return "role/edit-role";
     }
     @PostMapping("/edit")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String update(@Valid @ModelAttribute Role role,BindingResult result,RedirectAttributes redirectAttr){
         redirectAttr.addAttribute("id",role.getId());
         if(result.hasErrors()){
@@ -76,11 +83,13 @@ public class RoleController {
         return "redirect:/role/detail/{id}";
     }
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String deleteRole(@PathVariable("id") Long id){
         roleService.deleteRole(id);
         return "redirect:/role/";
     }
     @GetMapping("/assign-privilege/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){
          Role role=roleService.getRole(id);
         List<Privilege> privilegeList=privilegeService.getAllPrivileges();
@@ -89,6 +98,7 @@ public class RoleController {
         return "role/assign-privilege";
     }
     @PostMapping("/assign-privilege")
+    @PreAuthorize("hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')")
     public String assignPrivilege(@RequestParam("id") Long id,@Valid @ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
                                   RedirectAttributes redirectAttr){
         Role role=roleService.getRole(id);

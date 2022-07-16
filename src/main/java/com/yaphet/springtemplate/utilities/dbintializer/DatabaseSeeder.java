@@ -10,20 +10,18 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
-public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
+public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
     private final AppUserService appUserService;
     private final RoleService roleService;
-    private final AppUserRoleService appUserRoleService;
     private final PrivilegeService privilegeService;
-    private final RolePrivilegeService rolePrivilegeService;
 
 
 
@@ -31,28 +29,12 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if(appUserService.getAppUsers() != null){
+        if(alreadySetup){
             return;
         }
-        //create super admin user
-        AppUser adminAppUser = new AppUser();
-        adminAppUser.setFirstName("admin");
-        adminAppUser.setLastName("admin");
-        adminAppUser.setEmail("admin@admin.com");
-        adminAppUser.setUserName("admin@admin.com");
-        adminAppUser.setPassword("admin");
-        adminAppUser.setDob(LocalDate.of(2000, 2, 25));
-        appUserService.saveAppUser(adminAppUser);
-        //create default roles
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role("SUPER_ADMIN", "Global access"));
-        roles.add(new Role("ADMIN", "Global access"));
-        roles.add(new Role("USER", "Limited Access"));
-        for(Role role : roles){
-            roleService.createRole(role);
-        }
+
         //create default privilege
-        List<Privilege> privileges = new ArrayList<>();
+        Set<Privilege> privileges = new HashSet<>();
         privileges.add(new Privilege("ROLE-CREATE"));
         privileges.add(new Privilege("ROLE-DETAIL"));
         privileges.add(new Privilege("ROLE-EDIT"));
@@ -67,10 +49,35 @@ public class SeedData implements ApplicationListener<ContextRefreshedEvent> {
         for(Privilege privilege : privileges){
             privilegeService.createPrivilege(privilege);
         }
-        //assign privileges to super_admin role;
-        rolePrivilegeService.assignPrivilege(privileges, "SUPER_ADMIN");
-        //assign super admin role
-        appUserRoleService.assignRole(adminAppUser.getEmail(),"SUPER_ADMIN");
+
+        //create default roles
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role("ROLE_SUPER_ADMIN", "Global access", privileges));
+        roles.add(new Role("ROLE_ADMIN", "Global access", privileges));
+        roles.add(new Role("ROLE_USER", "Limited Access", Set.of()));
+        for(Role role : roles){
+            roleService.createRole(role);
+        }
+
+        //create super admin user
+        AppUser adminAppUser = new AppUser();
+        adminAppUser.setFirstName("admin");
+        adminAppUser.setLastName("admin");
+        adminAppUser.setEmail("admin@admin.com");
+        adminAppUser.setUserName("admin@admin.com");
+        adminAppUser.setPassword("admin");
+        adminAppUser.setRoles(roles);
+        appUserService.saveAppUser(adminAppUser);
+
+        //create super admin user
+        AppUser user = new AppUser();
+        user.setFirstName("user");
+        user.setLastName("user");
+        user.setEmail("user@user.com");
+        user.setUserName("user@user.com");
+        user.setPassword("user");
+        user.setRoles(Set.of(roleService.getRole("ROLE_USER")));
+        appUserService.saveAppUser(user);
 
         alreadySetup = true;
 

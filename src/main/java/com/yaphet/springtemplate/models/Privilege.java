@@ -5,16 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
+
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(
-        name = "privilege",
-        uniqueConstraints = @UniqueConstraint(
-                name = "privilege_unique",
-                columnNames = "privilege_name")
-)
+@Table(name = "privileges")
 public class Privilege {
     @Id
     @SequenceGenerator(
@@ -28,8 +25,11 @@ public class Privilege {
     )
     @Column(name = "privilege_id")
     private Long id;
-    @Column(name = "privilege_name")
+    @Column(name = "privilege_name", nullable = false, unique = true)
     private String privilegeName;
+
+    @ManyToMany(mappedBy = "privileges")
+    private Set<Role> roles;
     public Privilege(String privilegeName){
         this.privilegeName = privilegeName;
     }

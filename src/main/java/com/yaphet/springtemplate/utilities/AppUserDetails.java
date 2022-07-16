@@ -1,6 +1,7 @@
 package com.yaphet.springtemplate.utilities;
 
 import com.yaphet.springtemplate.models.AppUser;
+import com.yaphet.springtemplate.models.Privilege;
 import com.yaphet.springtemplate.models.Role;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,10 +19,16 @@ public class AppUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles=appUser.getRoles();
-        List<SimpleGrantedAuthority> authorities=new ArrayList<>();
-        for(Role role:roles){
+        Set<Role> roles = appUser.getRoles();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        for(Role role : roles){
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+            System.out.println("Role: " + role.getRoleName());
+            for(Privilege privilege : role.getPrivileges()){
+                System.out.println("Privilege: " + privilege.getPrivilegeName());
+                authorities.add(new SimpleGrantedAuthority(privilege.getPrivilegeName()));
+            }
         }
         return authorities;
     }

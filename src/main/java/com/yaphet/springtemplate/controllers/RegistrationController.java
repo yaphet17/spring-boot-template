@@ -23,8 +23,8 @@ public class RegistrationController {
     }
     @GetMapping("/register")
     public String registrationForm(Model model){
-        AppUser appUser=new AppUser();
-        model.addAttribute("appUser",appUser);
+        AppUser appUser = new AppUser();
+        model.addAttribute("appUser", appUser);
         return "registration/register-user";
     }
     @PostMapping("/register")

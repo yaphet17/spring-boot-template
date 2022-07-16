@@ -17,13 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(
-        name = "app_users",
-        uniqueConstraints = @UniqueConstraint(
-                name = "email_unique",
-                columnNames = "email"
-        )
-)
+@Table(name = "app_users")
 public class AppUser {
 
     @Id
@@ -44,7 +38,7 @@ public class AppUser {
     private String lastName;
     private String userName;
     @Email
-    @Column(name = "email" ,nullable = false)
+    @Column(name = "email" ,nullable = false, unique = true)
     private String email;
     @Column(name = "password" ,nullable = false)
     private String password;

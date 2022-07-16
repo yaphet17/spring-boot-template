@@ -38,7 +38,7 @@ public class RegistrationService {
         }
         String token = appUserService.signUpUser(appUser);
         //assign default role to new user
-        appUserRoleService.assignRole(appUser.getEmail(),"USER");
+        appUserRoleService.assignRole(appUser.getEmail(),"ROLE_USER");
         String link = BASE_URL+ "/account/confirm?token="+token;
         emailSender.send(
                 appUser.getEmail(),
