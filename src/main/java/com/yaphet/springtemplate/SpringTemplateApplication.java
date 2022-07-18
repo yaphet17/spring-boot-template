@@ -11,7 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
                 "com.yaphet.springtemplate.repositories",
                 "com.yaphet.springtemplate.controllers",
                 "com.yaphet.springtemplate.services",
-                "com.yaphet.springtemplate.utilities"
+                "com.yaphet.springtemplate.utilities",
+                "com.yaphet.springtemplate.config.security"
 
         })
 public class SpringTemplateApplication {

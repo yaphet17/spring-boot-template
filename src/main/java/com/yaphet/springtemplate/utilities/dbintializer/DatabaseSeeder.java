@@ -53,7 +53,11 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
         //create default roles
         Set<Role> roles = new HashSet<>();
         roles.add(new Role("ROLE_SUPER_ADMIN", "Global access", privileges));
-        roles.add(new Role("ROLE_ADMIN", "Global access", privileges));
+        roles.add(new Role("ROLE_ADMIN", "Limited Global access", privileges
+                .stream()
+                .filter(privilege -> !privilege.getPrivilegeName().equals("ROLE-CREATE"))
+                .collect(Collectors.toSet())
+        ));
         roles.add(new Role("ROLE_USER", "Limited Access", Set.of()));
         for(Role role : roles){
             roleService.createRole(role);

@@ -3,11 +3,11 @@ package com.yaphet.springtemplate.services;
 import com.yaphet.springtemplate.exceptions.EmailAlreadyExistsException;
 import com.yaphet.springtemplate.exceptions.EmailNotFoundException;
 import com.yaphet.springtemplate.exceptions.IdNotFoundException;
-import com.yaphet.springtemplate.utilities.AppUserDetails;
-import com.yaphet.springtemplate.models.ConfirmationToken;
 import com.yaphet.springtemplate.models.AppUser;
+import com.yaphet.springtemplate.models.ConfirmationToken;
 import com.yaphet.springtemplate.repositories.AppUserRepository;
-import lombok.AllArgsConstructor;
+import com.yaphet.springtemplate.utilities.AppUserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +21,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class AppUserService implements UserDetailsService {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -30,6 +29,15 @@ public class AppUserService implements UserDetailsService {
     private final String USER_NOT_FOUND_MSG = "user with %s not found";
     private final String RESOURCE_NAME = "App user";
     private final int TOKEN_EXPIRATION_DELAY = 15;
+
+    @Autowired
+    public AppUserService(BCryptPasswordEncoder passwordEncoder,
+                          AppUserRepository appUserRepository,
+                          ConfirmationTokenService confirmationTokenService) {
+        this.passwordEncoder = passwordEncoder;
+        this.appUserRepository = appUserRepository;
+        this.confirmationTokenService = confirmationTokenService;
+    }
 
 
     public List<AppUser> getAppUsers() {
@@ -132,9 +140,11 @@ public class AppUserService implements UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return appUserRepository.findByEmail(email)
+        AppUserDetails appUserDetails = appUserRepository.findByEmail(email)
                 .map(AppUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+        System.out.println("Authorities: " + appUserDetails.getAuthorities());
+        return appUserDetails;
     }
 
 }

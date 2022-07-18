@@ -9,7 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -24,9 +27,7 @@ public class AppUserDetails implements UserDetails {
 
         for(Role role : roles){
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-            System.out.println("Role: " + role.getRoleName());
             for(Privilege privilege : role.getPrivileges()){
-                System.out.println("Privilege: " + privilege.getPrivilegeName());
                 authorities.add(new SimpleGrantedAuthority(privilege.getPrivilegeName()));
             }
         }
