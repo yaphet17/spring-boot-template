@@ -4,13 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class ChangePassword {
-
-    private Long id;
+    private String username;
     private String newPassword;
     private String oldPassword;
-
 }

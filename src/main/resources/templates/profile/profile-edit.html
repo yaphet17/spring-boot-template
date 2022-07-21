@@ -7,14 +7,14 @@
 </head>
 <body>
 <div class="container">
-    <form action="#" th:action="@{/profile/update}" th:object="${appUser}" method="POST">
+    <form action="#" th:action="@{/profile/edit}" th:object="${appUser}" method="POST">
         <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
             <input type="text" th:field="*{firstName}" name="firstName" class="form-control" id="firstName" >
             <p class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errorClass="error" th:errors="*{firstName}"/>
         </div><div class="mb-3">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input type="text" th:field="*{lastName}"  name="lastName" class="form-control" id="lastName">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" th:field="*{lastName}"  name="lastName" class="form-control" id="lastName">
         <p class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errorClass="error" th:errors="*{lastName}"/>
     </div>
         <div class="mb-3">

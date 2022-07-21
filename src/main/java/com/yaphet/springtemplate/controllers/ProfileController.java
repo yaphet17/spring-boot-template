@@ -10,11 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @RequiredArgsConstructor
 @Controller
@@ -24,51 +25,53 @@ public class ProfileController {
     private final AppUserService appUserService;
     private final ProfileService profileService;
 
-    @GetMapping("/{id}")
-    @PreAuthorize("#id == principal.id")
-    public String getAppUser(@PathVariable("id") Long id, Model model){
-        AppUser appUser = appUserService.getAppUser(id);
+    @GetMapping
+    public String getAppUser(Model model){
+        AppUser appUser = appUserService.getAppUser(getLoggedInUser());
         model.addAttribute("appUser", appUser);
         return "/profile/profile-detail";
     }
 
-    @GetMapping("/update/{id}")
-    @PreAuthorize("#id == principal.id")
-    public String updateForm(@PathVariable("id") Long id, Model model){
-        AppUser appUser = appUserService.getAppUser(id);
+    @GetMapping("/edit")
+    public String updateForm(Model model){
+        AppUser appUser = appUserService.getAppUser(getLoggedInUser());
         model.addAttribute("appUser", appUser);
         return "/profile/profile-edit";
     }
-    @PostMapping("/update")
-    @PreAuthorize("#appUser.id == principal.id")
-    public String update(@Valid @ModelAttribute AppUser appUSer, BindingResult result, RedirectAttributes redirectAttr){
+    @PostMapping("/edit")
+    @PreAuthorize("#appUser.email == principal.username")
+    public String update(@Valid @ModelAttribute AppUser appUser, BindingResult result){
         if(result.hasErrors()){
-            return "redirect:/profile/update";
+            return "redirect:/profile/edit";
         }
-        redirectAttr.addAttribute("id", appUSer.getId());
-        appUserService.updateAppUser(appUSer);
-        return "redirect:/profile/{id}";
+        appUserService.updateAppUser(appUser);
+        return "redirect:/profile";
     }
 
-    @GetMapping("/change-password/{id}")
-    @PreAuthorize("#id == principal.id")
-    public String changePasswordForm(@PathVariable("id") Long id, Model model){
+    @GetMapping("/change-password")
+    public String changePasswordForm(Model model){
         ChangePassword changePassword = new ChangePassword();
 
-        changePassword.setId(id);
-        model.addAttribute("changePassword",changePassword);
+        changePassword.setUsername(getLoggedInUser());
+        model.addAttribute("changePassword", changePassword);
         return "/profile/change-password";
     }
     @PostMapping("/change-password")
-    @PreAuthorize("#changePassword.id == principal.id")
-    public String changePasswordForm(@ModelAttribute ChangePassword changePassword,BindingResult result,RedirectAttributes redirectAttributes){
-        Long id = changePassword.getId();
-
-        redirectAttributes.addAttribute("id",id);
+    @PreAuthorize("#changePassword.username == principal.username")
+    public String changePassword(@ModelAttribute ChangePassword changePassword, BindingResult result){
         if(result.hasErrors()){
-            return "redirect: /profile/change-password/{id}";
+            return "redirect: /profile/change-password";
         }
-        profileService.changePassword(id,changePassword.getOldPassword(),changePassword.getNewPassword());
-        return "redirect:/profile/{id}";
+        profileService.changePassword(changePassword.getUsername(),
+                changePassword.getOldPassword(),
+                changePassword.getNewPassword());
+        return "redirect:/profile";
+    }
+
+    private String getLoggedInUser(){
+        return SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
     }
 }

@@ -12,8 +12,8 @@ public class ProfileService {
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public void changePassword(Long id, String oldPassword, String newPassword ){
-        AppUser appUser = appUserService.getAppUser(id);
+    public void changePassword(String username, String oldPassword, String newPassword ){
+        AppUser appUser = appUserService.getAppUser(username);
 
         if(!passwordEncoder.matches(oldPassword, appUser.getPassword())){
             return;
