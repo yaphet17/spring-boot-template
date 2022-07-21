@@ -5,6 +5,8 @@ import com.yaphet.springtemplate.services.AppUserService;
 import com.yaphet.springtemplate.services.ProfileService;
 import com.yaphet.springtemplate.viewmodels.ChangePassword;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,7 +23,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("profile")
 public class ProfileController {
-
+    private static final Logger log = LogManager.getLogger(ProfileController.class);
     private final AppUserService appUserService;
     private final ProfileService profileService;
 
@@ -42,6 +44,7 @@ public class ProfileController {
     @PreAuthorize("#appUser.email == principal.username")
     public String update(@Valid @ModelAttribute AppUser appUser, BindingResult result){
         if(result.hasErrors()){
+            log.error(result.getAllErrors());
             return "redirect:/profile/edit";
         }
         appUserService.updateAppUser(appUser);
@@ -60,6 +63,7 @@ public class ProfileController {
     @PreAuthorize("#changePassword.username == principal.username")
     public String changePassword(@ModelAttribute ChangePassword changePassword, BindingResult result){
         if(result.hasErrors()){
+            log.error(result.getAllErrors());
             return "redirect: /profile/change-password";
         }
         profileService.changePassword(changePassword.getUsername(),

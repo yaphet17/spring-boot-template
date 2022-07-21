@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class CustomErrorController implements ErrorController {
-    private final Logger logger= LoggerFactory.getLogger(CustomErrorController.class);
+    private final Logger log = LoggerFactory.getLogger(CustomErrorController.class);
     @RequestMapping("error")
     public String handleError(HttpServletRequest request, Model model){
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
@@ -22,14 +22,14 @@ public class CustomErrorController implements ErrorController {
         if(status != null){
             int statusCode = Integer.parseInt(status.toString());
             if(statusCode == HttpStatus.NOT_FOUND.value()){
-                logger.warn("page not found");
+                log.warn("page not found : error code " + statusCode);
                 return "error/error-404";
             }else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()){
-                logger.warn("internal server error");
+                log.warn("internal server error : error code " + statusCode);
                 return "error/error-500";
             }
         }
-        logger.warn("unknown error occurred error_code "+status);
+        log.warn("unknown error occurred");
         return "error/error";
     }
 }

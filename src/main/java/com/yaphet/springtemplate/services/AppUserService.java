@@ -41,11 +41,11 @@ public class AppUserService implements UserDetailsService {
 
 
     public List<AppUser> getAppUsers() {
-        return appUserRepository.findAllUndeleted();
+        return appUserRepository.findAll();
     }
     public AppUser getAppUser(Long id){
         return appUserRepository
-                .findByIdUndeleted(id)
+                .findById(id)
                 .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME ,id));
     }
     public AppUser getAppUser(String email){
@@ -72,8 +72,8 @@ public class AppUserService implements UserDetailsService {
         String firstName = au.getFirstName();
         String lastName = au.getLastName();
         AppUser appUser = appUserRepository
-                .findByIdUndeleted(au.getId())
-                .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, au.getId()));
+                .findByEmail(au.getEmail())
+                .orElseThrow(() -> new EmailNotFoundException(au.getEmail()));
 
         if(firstName != null &&
                 firstName.length() > 0 &&
@@ -97,15 +97,15 @@ public class AppUserService implements UserDetailsService {
             updated = true;
         }
         if(updated){
-            appUserRepository.save(au);
+            appUserRepository.save(appUser);
         }
     }
 
     public void deleteAppUser(Long id) {
         appUserRepository
-                .findByIdUndeleted(id)
+                .findById(id)
                 .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
-        appUserRepository.deleteAppUser(id);
+        appUserRepository.deleteById(id);
     }
 
     @Transactional
@@ -143,7 +143,6 @@ public class AppUserService implements UserDetailsService {
         AppUserDetails appUserDetails = appUserRepository.findByEmail(email)
                 .map(AppUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
-        System.out.println("Authorities: " + appUserDetails.getAuthorities());
         return appUserDetails;
     }
 
