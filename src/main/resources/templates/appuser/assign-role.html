@@ -11,7 +11,7 @@
 <div class="container">
     <span class="text-success" th:text="${success}" th:if="${success}"></span></br>
     <p class="text-info">Assign roles to user <span th:text="${appUser.firstName+' '+appUser.lastName}"></span></p>
-    <form action="#" th:action="@{/role/assign-role}" method="POST">
+    <form action="#" th:action="@{/user/assign-role}" method="POST">
         <input type="hidden" th:name="id" th:value="*{appUser.id}">
         <select class="form-select" aria-label="Default select example" id="roleList"  th:field="*{selectedRole.selectedRoles}" multiple="multiple">
             <option th:each="role:${selectedRole.selectedRoles}" th:value="*{role.id}"
