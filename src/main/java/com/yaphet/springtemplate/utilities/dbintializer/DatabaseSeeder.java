@@ -71,6 +71,7 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
         adminAppUser.setUserName("admin@admin.com");
         adminAppUser.setPassword("admin");
         adminAppUser.setRoles(roles);
+        adminAppUser.setEnabled(true);
         appUserService.saveAppUser(adminAppUser);
 
         //create super admin user
@@ -81,6 +82,7 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
         user.setUserName("user@user.com");
         user.setPassword("user");
         user.setRoles(Set.of(roleService.getRole("ROLE_USER")));
+        user.setEnabled(true);
         appUserService.saveAppUser(user);
 
         alreadySetup = true;

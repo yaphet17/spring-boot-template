@@ -20,6 +20,8 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.yaphet.springtemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
+
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("user")
@@ -51,7 +53,7 @@ public class AppUserController {
                          BindingResult result,
                          RedirectAttributes redirectAttr){
         if(result.hasErrors()){
-            log.error(result.getAllErrors());
+            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:user/create";
         }
         appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
@@ -91,7 +93,7 @@ public class AppUserController {
 
         redirectAttributes.addAttribute("id", id);
         if(result.hasErrors()){
-            log.error(result.getAllErrors());
+            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:/user/assign-role/{id}";
         }
         appUser.setRoles(new HashSet<>(selectedRoles.getSelectedRoles()));

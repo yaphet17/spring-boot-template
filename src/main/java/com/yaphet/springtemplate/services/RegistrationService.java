@@ -26,8 +26,8 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;
     private final String BASE_URL = new Properties().getProperty(
-            "app-react-template.base-url",
-            "http://localhost");
+            "app-spring-template.base-url",
+            "http://localhost:8080");
 
     public void register(AppUser appUser) {
         String email = appUser.getEmail();
@@ -36,10 +36,11 @@ public class RegistrationService {
         if(!isEmailValid){
             throw new InvalidEmailException(email);
         }
+        appUser.setUserName(email);
         String token = appUserService.signUpUser(appUser);
         //assign default role to new user
         appUserRoleService.assignRole(appUser.getEmail(),"ROLE_USER");
-        String link = BASE_URL+ "/account/confirm?token="+token;
+        String link = BASE_URL + "/confirm?token=" + token;
         emailSender.send(
                 appUser.getEmail(),
                 buildEmail(appUser.getFirstName() + " "+appUser.getLastName(), link)

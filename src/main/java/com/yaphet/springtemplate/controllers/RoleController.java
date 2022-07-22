@@ -2,14 +2,14 @@ package com.yaphet.springtemplate.controllers;
 
 import com.yaphet.springtemplate.models.Privilege;
 import com.yaphet.springtemplate.models.Role;
-import com.yaphet.springtemplate.services.RoleService;
 import com.yaphet.springtemplate.services.PrivilegeService;
-import com.yaphet.springtemplate.utilities.SelectPrivilege;
 import com.yaphet.springtemplate.services.RolePrivilegeService;
+import com.yaphet.springtemplate.services.RoleService;
+import com.yaphet.springtemplate.utilities.SelectPrivilege;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,11 +19,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.yaphet.springtemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
+
 @AllArgsConstructor
 @Controller
 @RequestMapping("role")
 public class RoleController {
 
+    private static final Logger log = LogManager.getLogger();
     private final RoleService roleService;
     private final PrivilegeService privilegeService;
 
@@ -49,6 +52,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('ROLE-CREATE')")
     public String createRole(@Valid @ModelAttribute Role role, BindingResult result){
         if(result.hasErrors()){
+            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "role/create-role";
         }
         roleService.createRole(role);
@@ -57,23 +61,26 @@ public class RoleController {
 
     @GetMapping("/detail/{id}")
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
-    public String roleDetail(@PathVariable("id") Long id,Model model){
-        Role role=roleService.getRole(id);
+    public String roleDetail(@PathVariable("id") Long id, Model model){
+        Role role = roleService.getRole(id);
         model.addAttribute("role",role);
         return "role/role-detail";
     }
     @GetMapping("/edit/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE-CREATE')")
     public String updateForm(@PathVariable("id") Long id, Model model){
-        Role role=roleService.getRole(id);
+        Role role = roleService.getRole(id);
         model.addAttribute("role",role);
         return "role/edit-role";
     }
     @PostMapping("/edit")
     @PreAuthorize("hasAnyAuthority('ROLE-CREATE')")
-    public String update(@Valid @ModelAttribute Role role,BindingResult result,RedirectAttributes redirectAttr){
-        redirectAttr.addAttribute("id",role.getId());
+    public String update(@Valid @ModelAttribute Role role,
+                         BindingResult result,
+                         RedirectAttributes redirectAttr){
+        redirectAttr.addAttribute("id", role.getId());
         if(result.hasErrors()){
+            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
            return "redirect:/role/edit/{id}";
        }
         //if role is updated return success message else redirect back to update form
@@ -93,23 +100,26 @@ public class RoleController {
     }
     @GetMapping("/assign-privilege/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE-CREATE')")
-    public String assignPrivilegeForm(@PathVariable("id") Long id,Model model){
-         Role role=roleService.getRole(id);
-        List<Privilege> privilegeList=privilegeService.getAllPrivileges();
-        model.addAttribute("role",role);
-        model.addAttribute("selectedPrivilege",new SelectPrivilege(privilegeList));
+    public String assignPrivilegeForm(@PathVariable("id") Long id, Model model){
+        Role role = roleService.getRole(id);
+        List<Privilege> privilegeList = privilegeService.getAllPrivileges();
+        model.addAttribute("role", role);
+        model.addAttribute("selectedPrivilege", new SelectPrivilege(privilegeList));
         return "role/assign-privilege";
     }
     @PostMapping("/assign-privilege")
     @PreAuthorize("hasAnyAuthority('ROLE-EDIT')")
-    public String assignPrivilege(@RequestParam("id") Long id,@Valid @ModelAttribute SelectPrivilege selectPrivilege,BindingResult result,
+    public String assignPrivilege(@RequestParam("id") Long id,
+                                  @Valid @ModelAttribute SelectPrivilege selectPrivilege,
+                                  BindingResult result,
                                   RedirectAttributes redirectAttr){
-        Role role=roleService.getRole(id);
-        redirectAttr.addAttribute("id",role.getId());
+        Role role = roleService.getRole(id);
+        redirectAttr.addAttribute("id", role.getId());
         if(result.hasErrors()){
+            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:/role/assign-privilege/{id}";
         }
-        rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(),role.getRoleName());
+        rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(), role.getRoleName());
         return "redirect:/role/detail/{id}";
     }
 

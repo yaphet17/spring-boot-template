@@ -32,4 +32,8 @@ public class CustomErrorController implements ErrorController {
         log.warn("unknown error occurred");
         return "error/error";
     }
+
+    public static String getBindingErrorMessage(){
+        return "Unable to bind";
+    }
 }

@@ -53,7 +53,7 @@ public class AppUserService implements UserDetailsService {
     public AppUser getAppUser(String email){
         return appUserRepository
                 .findByEmail(email)
-                .orElseThrow(()->new EmailNotFoundException(email));
+                .orElseThrow(() -> new EmailNotFoundException(email));
     }
     public void saveAppUser(AppUser appUser){
         String email = appUser.getEmail();
@@ -64,7 +64,6 @@ public class AppUserService implements UserDetailsService {
         }
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
-        appUser.setEnabled(true);
         appUserRepository.save(appUser);
     }
     @Transactional
@@ -130,7 +129,6 @@ public class AppUserService implements UserDetailsService {
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
         String token = UUID.randomUUID().toString();
 
-        appUser.setPassword(encodedPassword);
         saveAppUser(appUser);
         ConfirmationToken confirmationToken = new ConfirmationToken(token,
                 LocalDateTime.now(),
