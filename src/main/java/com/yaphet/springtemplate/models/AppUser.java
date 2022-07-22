@@ -45,7 +45,7 @@ public class AppUser {
     @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dob;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "appuser_roles",
             joinColumns = @JoinColumn(
@@ -83,5 +83,18 @@ public class AppUser {
 
     public void setUserName(String email) {
         this.userName = email;
+    }
+
+
+    public void addRole(Role role){
+        System.out.println("======================Role added " + role.getRoleName());
+        roles.add(role);
+        role.getAppUsers().add(this);
+    }
+
+    public void removeRole(Role role){
+        System.out.println("======================Role removed " + role.getRoleName());
+        roles.remove(role);
+        role.getAppUsers().remove(this);
     }
 }

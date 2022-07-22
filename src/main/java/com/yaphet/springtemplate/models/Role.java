@@ -32,9 +32,9 @@ public class Role {
     @Column(name = "role_description")
     private String roleDescription;
 
-    @ManyToMany(mappedBy =  "roles")
+    @ManyToMany(mappedBy =  "roles", fetch = FetchType.LAZY)
     private Set<AppUser> appUsers;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name ="role_privileges",
             joinColumns = @JoinColumn(
@@ -52,6 +52,15 @@ public class Role {
         this.roleName = roleName;
         this.roleDescription = roleDescription;
         this.privileges = privileges;
+    }
+
+    public void addAppUser(AppUser appUser){
+        appUsers.add(appUser);
+        appUser.getRoles().add(this);
+    }
+    public void removeAppUser(AppUser appUser){
+        appUsers.remove(appUser);
+        appUser.getRoles().remove(this);
     }
 
 
