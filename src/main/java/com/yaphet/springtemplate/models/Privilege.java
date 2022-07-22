@@ -34,4 +34,14 @@ public class Privilege {
         this.privilegeName = privilegeName;
     }
 
+    public void addRole(Role role){
+        roles.add(role);
+        role.getPrivileges().add(this);
+    }
+
+    public void removeRole(Role role){
+        roles.remove(role);
+        role.getPrivileges().remove(this);
+    }
+
 }

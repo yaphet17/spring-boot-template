@@ -2,6 +2,7 @@ package com.yaphet.springtemplate.services;
 
 import com.yaphet.springtemplate.exceptions.RoleAlreadyExistException;
 import com.yaphet.springtemplate.exceptions.RoleNotFoundException;
+import com.yaphet.springtemplate.models.Privilege;
 import com.yaphet.springtemplate.models.Role;
 import com.yaphet.springtemplate.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +19,12 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public void createRole(Role role) {
-        String roleName = role.getRoleName();
-        boolean roleExists =   roleRepository.findByRoleName(roleName).isPresent();
+        String roleName = role.getRoleName().toUpperCase();
+        if(!roleName.startsWith("ROLE_")){
+            roleName =  "ROLE_" + roleName;
+        }
+        role.setRoleName(roleName);
+        boolean roleExists = roleRepository.findByRoleName(roleName).isPresent();
 
         if(roleExists){
             throw new RoleAlreadyExistException(roleName);
@@ -40,34 +46,53 @@ public class RoleService {
     }
 
     public void deleteRole(Long id) {
-        roleRepository
+        Role role = roleRepository
                 .findById(id)
                 .orElseThrow(() -> new RoleNotFoundException(id));
+
+        for(Privilege privilege : role.getPrivileges()){
+            privilege.removeRole(role);
+        }
         roleRepository.deleteById(id);
     }
 
     @Transactional
-    public boolean updateRole(Role r) {
+    public boolean updateRole(Role newRole) {
         boolean isUpdated = false;
-        Long id = r.getId();
-        Role role = roleRepository
-                .findById(r.getId())
+        Long id = newRole.getId();
+        Role updatedRole = roleRepository
+                .findById(newRole.getId())
                 .orElseThrow(() -> new RoleNotFoundException(id));
+        Role oldRole = updatedRole;
 
-        if(r.getRoleName() != null &&
-                r.getRoleName().length() > 0 &&
-                !Objects.equals(role.getRoleName(), r.getRoleName())){
-            role.setRoleName(r.getRoleName());
+        if(newRole.getRoleName() != null &&
+                newRole.getRoleName().length() > 0 &&
+                !Objects.equals(updatedRole.getRoleName(), newRole.getRoleName())){
+            updatedRole.setRoleName(newRole.getRoleName());
+
             isUpdated = true;
         }
-        if(r.getRoleDescription() != null &&
-                r.getRoleDescription().length() > 0 &&
-                !Objects.equals(r.getRoleDescription(), role.getRoleDescription())){
-            role.setRoleDescription(r.getRoleDescription());
+        if(newRole.getRoleDescription() != null &&
+                newRole.getRoleDescription().length() > 0 &&
+                !Objects.equals(newRole.getRoleDescription(), updatedRole.getRoleDescription())){
+            updatedRole.setRoleDescription(newRole.getRoleDescription());
             isUpdated = true;
         }
+        if(isUpdated){
+            roleRepository.save(updatedRole);
+            Set<Privilege> privileges = oldRole.getPrivileges();
+            if(privileges != null){
+                for(Privilege privilege : privileges){
+                    privilege.removeRole(oldRole);
+                }
+                for(Privilege privilege : privileges){
+                    privilege.addRole(updatedRole);
+                }
+            }
+
+        }
+
+
         return isUpdated;
     }
-
-
 }

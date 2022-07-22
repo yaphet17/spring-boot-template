@@ -6,11 +6,9 @@ import com.yaphet.springtemplate.exceptions.PrivilegeNotFoundException;
 import com.yaphet.springtemplate.models.Privilege;
 import com.yaphet.springtemplate.repositories.PrivilegeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,7 @@ public class PrivilegeService {
     public Privilege getPrivilege(Long id){
         return privilegeRepository
                 .findById(id)
-                .orElseThrow(()->new IdNotFoundException("Privilege", id));
+                .orElseThrow(() -> new IdNotFoundException("Privilege", id));
     }
 
 }

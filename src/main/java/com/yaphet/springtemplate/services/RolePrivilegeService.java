@@ -23,6 +23,9 @@ public class RolePrivilegeService {
         rolePrivileges.addAll(privileges);
         role.setPrivileges(rolePrivileges);
         updateRolePrivilege(role);
+        for(Privilege privilege : privileges){
+            privilege.addRole(role);
+        }
     }
 
     @Transactional

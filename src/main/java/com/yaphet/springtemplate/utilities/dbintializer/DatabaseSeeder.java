@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
-    boolean alreadySetup = false;
+    private static boolean alreadySetup = false;
     private final AppUserService appUserService;
     private final RoleService roleService;
     private final PrivilegeService privilegeService;

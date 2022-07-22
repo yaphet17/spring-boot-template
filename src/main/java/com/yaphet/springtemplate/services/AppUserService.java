@@ -68,8 +68,8 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
     }
     @Transactional
-    public void updateAppUser(AppUser au) {
-        boolean updated = false;
+    public boolean updateAppUser(AppUser au) {
+        boolean isUpdated = false;
         String email = au.getEmail();
         String firstName = au.getFirstName();
         String lastName = au.getLastName();
@@ -81,13 +81,13 @@ public class AppUserService implements UserDetailsService {
                 firstName.length() > 0 &&
                 !Objects.equals(appUser.getFirstName(), firstName)){
             appUser.setFirstName(firstName);
-            updated = true;
+            isUpdated = true;
         }
         if(lastName != null &&
                 lastName.length() > 0 &&
                 !Objects.equals(appUser.getLastName(), lastName)){
             appUser.setLastName(lastName);
-            updated = true;
+            isUpdated = true;
         }
         if(email != null &&
                 email.length() > 0 &&
@@ -96,11 +96,12 @@ public class AppUserService implements UserDetailsService {
                     .findByEmail(au.getEmail())
                     .orElseThrow(() -> new EmailAlreadyExistsException(email));
             appUser.setEmail(email);
-            updated = true;
+            isUpdated = true;
         }
-        if(updated){
+        if(isUpdated){
             appUserRepository.save(appUser);
         }
+        return isUpdated;
     }
 
     public void deleteAppUser(Long id) {

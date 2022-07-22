@@ -21,6 +21,7 @@ public class AppUserRoleService {
 
         roles.add(role);
         appUser.setRoles(roles);
+        role.addAppUser(appUser);
         appUserService.updateAppUserRole(appUser);
     }
 }
