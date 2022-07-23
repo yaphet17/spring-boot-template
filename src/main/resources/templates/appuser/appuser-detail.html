@@ -5,32 +5,40 @@
 <body>
 <div th:replace="layouts/site :: header">
 </div>
-<div class="container">
-    <span class="text-success" th:text="${success}" th:if="${success}"></span>
-    <span class="alert alert-danger" th:text="${error}" th:if="${error}"></span></br>
-    <a th:href="@{/user}" class="btn btn-info text-white">User List</a>
-    <a th:href="@{/user/assign-role/{id}(id=${appUser.id})}" class="btn btn-info text-white">Assign Role</a>
-    <span class="text-info">
+
+<div th:fragment="sidebar" class="container-fluid">
+    <div class="row flex-nowrap">
+        <div th:replace="layouts/site :: sidebar">
+        </div>
+        <div class="col py-3">
+
+            <span class="text-success" th:text="${success}" th:if="${success}"></span>
+            <span class="alert alert-danger" th:text="${error}" th:if="${error}"></span></br>
+            <a th:href="@{/user}" class="btn btn-info text-white">User List</a>
+            <a th:href="@{/user/assign-role/{id}(id=${appUser.id})}" class="btn btn-info text-white">Assign Role</a>
+            <span class="text-info">
           User Name: <p th:text="${appUser.firstName+' '+appUser.lastName}"></p>
     </span>
-    <span class="text-info">
-           Username: <p  th:text="${appUser.userName}"></p>
+            <span class="text-info">
+           Username: <p th:text="${appUser.userName}"></p>
     </span>
-    <span class="text-info">
-           Email: <p  th:text="${appUser.email}"></p>
+            <span class="text-info">
+           Email: <p th:text="${appUser.email}"></p>
     </span>
-    <span class="text-info">
-           Data of Birth: <p  th:text="${appUser.dob}"></p>
+            <span class="text-info">
+           Data of Birth: <p th:text="${appUser.dob}"></p>
     </span>
-    <span class="text-info">
-           Create At: <p  th:text="${appUser.createdAt}"></p>
+            <span class="text-info">
+           Create At: <p th:text="${appUser.createdAt}"></p>
     </span>
-    <span class="text-info">
-           Email Verification: <p  th:if="${appUser.enabled==true}"></p>
+            <span class="text-info">
+           Email Verification: <p th:if="${appUser.enabled==true}"></p>
     </span>
 
-    <p class="text-info">User Roles</p>
-    <span class="text-info" th:each="role:${appUser.roles}" th:text="${role.roleName}"></span>
+            <p class="text-info">User Roles</p>
+            <span class="text-info" th:each="role:${appUser.roles}" th:text="${role.roleName}"></span>
+        </div>
+    </div>
 </div>
 <div th:replace="layouts/site :: footer">
 </div>
