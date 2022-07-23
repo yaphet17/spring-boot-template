@@ -54,7 +54,7 @@
             </a>
         </li>
         <li class="border-top my-3"></li>
-        <li class="mb-1">
+        <li sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')" class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed text-white" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                 Account
             </button>
@@ -66,19 +66,19 @@
             </div>
         </li>
         <li class="border-top my-3"></li>
-        <li class="mb-1">
+        <li sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')" class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed text-white" data-bs-toggle="collapse" data-bs-target="#role-collapse" aria-expanded="false">
                 Role
             </button>
             <div class="collapse" id="role-collapse" style="">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a th:href="@{/role}" class="nav-link text-white">Roles List</a></li>
-                    <li><a th:href="@{/role/create}" class="nav-link text-white">Create Role</a></li>
+                    <li sec:authorize="hasAuthority('ROLE-CREATE')"><a th:href="@{/role/create}" class="nav-link text-white">Create Role</a></li>
                 </ul>
             </div>
         </li>
         <li class="border-top my-3"></li>
-        <li class="mb-1">
+        <li sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')" class="mb-1">
             <button class="btn btn-toggle align-items-center rounded collapsed text-white" data-bs-toggle="collapse" data-bs-target="#privilege-collapse" aria-expanded="false">
                 Privilege
             </button>
