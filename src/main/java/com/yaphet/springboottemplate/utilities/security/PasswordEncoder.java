@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.utilities;
+package com.yaphet.springboottemplate.utilities.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

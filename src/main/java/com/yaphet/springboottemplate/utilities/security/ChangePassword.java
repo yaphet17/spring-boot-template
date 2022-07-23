@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.viewmodels;
+package com.yaphet.springboottemplate.utilities.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

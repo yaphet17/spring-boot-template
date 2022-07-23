@@ -7,7 +7,7 @@ import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.ConfirmationToken;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
-import com.yaphet.springboottemplate.utilities.AppUserDetails;
+import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

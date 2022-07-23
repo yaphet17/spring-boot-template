@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.utilities;
+package com.yaphet.springboottemplate.utilities.security;
 
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.Privilege;
