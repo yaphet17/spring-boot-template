@@ -23,7 +23,7 @@ public class RegistrationController {
 
     @GetMapping
     public String index(){
-        return "landing-page";
+        return "index";
     }
     @GetMapping("/register")
     public String registrationForm(Model model){
