@@ -56,6 +56,7 @@ public class AppUserController {
             return "redirect:user/create";
         }
         appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
+        appUser.setEnabled(true);
         appUserService.saveAppUser(appUser);
         Long id = appUserService.getAppUser(appUser.getEmail()).getId();
         redirectAttr.addAttribute("id", id);
