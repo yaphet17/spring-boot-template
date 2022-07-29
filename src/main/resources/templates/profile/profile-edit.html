@@ -11,25 +11,29 @@
         <div th:replace="layouts/site :: sidebar">
         </div>
         <div class="col py-3">
-    <form action="#" th:action="@{/profile/edit}" th:object="${appUser}" method="POST">
-        <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
-            <input type="text" th:field="*{firstName}" name="firstName" class="form-control" id="firstName" >
-            <p class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errorClass="error" th:errors="*{firstName}"/>
-        </div><div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" th:field="*{lastName}"  name="lastName" class="form-control" id="lastName">
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errorClass="error" th:errors="*{lastName}"/>
-    </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" th:field="*{email}" name="email" class="form-control" id="email">
-            <p class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errorClass="error" th:errors="*{email}"/>
+            <form action="#" th:action="@{/profile/edit}" th:object="${appUser}" method="POST">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" th:field="*{firstName}" name="firstName" class="form-control" id="firstName">
+                    <p class="alert alert-warning" th:if="${#fields.hasErrors('firstName')}" th:errorClass="error"
+                       th:errors="*{firstName}"/>
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" th:field="*{lastName}" name="lastName" class="form-control" id="lastName">
+                    <p class="alert alert-warning" th:if="${#fields.hasErrors('lastName')}" th:errorClass="error"
+                       th:errors="*{lastName}"/>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" th:field="*{email}" name="email" class="form-control" id="email">
+                    <p class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errorClass="error"
+                       th:errors="*{email}"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-</div>
-</div>
+    </div>
 </div>
 <div th:replace="layouts/site :: footer">
 </div>

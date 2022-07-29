@@ -8,6 +8,7 @@ import com.yaphet.springboottemplate.utilities.SelectedRole;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,14 @@ public class AppUserController {
         model.addAttribute("appUserList", appUserList);
         return "appuser/appuser-list";
     }
+
+    @GetMapping("/detail/{id}")
+    public String getAppUser(@PathVariable("id") Long id, Model model){
+        AppUser appUser = appUserService.getAppUser(id);
+        model.addAttribute("appUser", appUser);
+        return "/appuser/appuser-detail";
+    }
+
     @GetMapping("/create")
     public String createForm(Model model){
         AppUser appUser = new AppUser();
@@ -61,12 +70,6 @@ public class AppUserController {
         Long id = appUserService.getAppUser(appUser.getEmail()).getId();
         redirectAttr.addAttribute("id", id);
         return "redirect:/user/detail/{id}";
-    }
-    @GetMapping("/detail/{id}")
-    public String getAppUser(@PathVariable("id") Long id, Model model){
-        AppUser appUser = appUserService.getAppUser(id);
-        model.addAttribute("appUser", appUser);
-        return "/appuser/appuser-detail";
     }
 
     @GetMapping("/delete/{id}")

@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.PastOrPresent;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
             columnNames = "token"
         )
 )
-public class ConfirmationToken {
+public class ConfirmationToken implements Serializable {
 
     @Id
     @SequenceGenerator(

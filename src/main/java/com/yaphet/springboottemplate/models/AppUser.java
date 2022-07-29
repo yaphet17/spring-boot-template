@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Past;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -18,7 +19,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "app_users")
-public class AppUser {
+public class AppUser implements Serializable {
 
     @Id
     @SequenceGenerator(

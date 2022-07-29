@@ -9,6 +9,7 @@ import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
 import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,6 +44,7 @@ public class AppUserService implements UserDetailsService {
     }
 
 
+    @Cacheable("appUserList")
     public List<AppUser> getAppUsers() {
         return appUserRepository.findAll();
     }

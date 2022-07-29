@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -12,7 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "privileges")
-public class Privilege {
+public class Privilege implements Serializable {
     @Id
     @SequenceGenerator(
             name = "privilege_sequence",
