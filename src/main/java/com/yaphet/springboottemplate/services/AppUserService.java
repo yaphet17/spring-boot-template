@@ -9,6 +9,7 @@ import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
 import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -69,12 +70,23 @@ public class AppUserService implements UserDetailsService {
     @Transactional
     public boolean updateAppUser(AppUser au) {
         boolean isUpdated = false;
-        String email = au.getEmail();
+        String newEmail = au.getEmail();
         String firstName = au.getFirstName();
         String lastName = au.getLastName();
-        AppUser appUser = appUserRepository
-                .findByEmail(au.getEmail())
-                .orElseThrow(() -> new EmailNotFoundException(au.getEmail()));
+        AppUser appUser = ((AppUserDetails)SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal()).getAppUser();
+
+        if(newEmail != null &&
+                newEmail.length() > 0 &&
+                !Objects.equals(newEmail, appUser.getEmail())){
+            if(appUserRepository.findByEmail(newEmail).isPresent()){
+                throw new EmailAlreadyExistsException(newEmail);
+            }
+            appUser.setEmail(newEmail);
+            isUpdated = true;
+        }
 
         if(firstName != null &&
                 firstName.length() > 0 &&
@@ -86,15 +98,6 @@ public class AppUserService implements UserDetailsService {
                 lastName.length() > 0 &&
                 !Objects.equals(appUser.getLastName(), lastName)){
             appUser.setLastName(lastName);
-            isUpdated = true;
-        }
-        if(email != null &&
-                email.length() > 0 &&
-                !Objects.equals(appUser.getEmail(), email)){
-            appUserRepository
-                    .findByEmail(au.getEmail())
-                    .orElseThrow(() -> new EmailAlreadyExistsException(email));
-            appUser.setEmail(email);
             isUpdated = true;
         }
         if(isUpdated){

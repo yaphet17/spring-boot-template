@@ -41,7 +41,6 @@ public class ProfileController {
         return "/profile/profile-edit";
     }
     @PostMapping("/edit")
-    @PreAuthorize("#appUser.email == principal.username")
     public String update(@Valid @ModelAttribute AppUser appUser, BindingResult result){
         if(result.hasErrors()){
             log.error(result.getAllErrors());

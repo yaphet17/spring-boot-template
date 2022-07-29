@@ -34,6 +34,10 @@ public class AppUserDetails implements UserDetails {
         return authorities;
     }
 
+    public AppUser getAppUser(){
+        return appUser;
+    }
+
     public Long getId(){
         return appUser.getId();
     }
