@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</head>
+<head th:replace="layouts/site :: head(title='Edit Role')"></head>
 <body>
-<div class="container">
-    <a th:href="@{/role}" class="btn btn-info text-white">Role List</a>
-<form action="#" th:action="@{/role/edit}" th:object="${role}" method="POST">
-    <input type="text" th:field="*{id}" hidden>
-    <div class="mb-3">
-        <label for="roleName" class="form-label">Role Name</label>
-        <input type="text" th:field="*{roleName}" class="form-control" id="roleName" >
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('roleName')}" th:errorClass="error" th:errors="*{roleName}"/>
+<div th:replace="layouts/site :: header">
+</div>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div th:replace="layouts/site :: sidebar">
+        </div>
+        <div class="col py-3">
+            <a th:href="@{/role}" class="btn btn-info text-white">Role List</a>
+            <form action="#" th:action="@{/role/edit}" th:object="${role}" method="POST">
+                <input type="text" th:field="*{id}" hidden>
+                <div class="mb-3">
+                    <label for="roleName" class="form-label">Role Name</label>
+                    <input type="text" th:field="*{roleName}" class="form-control" id="roleName">
+                    <p class="alert alert-warning" th:if="${#fields.hasErrors('roleName')}" th:errorClass="error"
+                       th:errors="*{roleName}"/>
+                </div>
+                <div class="mb-3">
+                    <label for="roleDescription" class="form-label">Role Description</label>
+                    <input type="text" th:field="*{roleDescription}" class="form-control" id="roleDescription">
+                    <p class="alert alert-warning" th:if="${#fields.hasErrors('roleDescription')}" th:errorClass="error"
+                       th:errors="*{roleDescription}"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="roleDescription" class="form-label">Role Description</label>
-        <input type="text" th:field="*{roleDescription}" class="form-control" id="roleDescription">
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('roleDescription')}" th:errorClass="error" th:errors="*{roleDescription}"/>
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
+</div>
+
+<div th:replace="layouts/site :: footer">
 </div>
 </body>
 </html>
