@@ -44,10 +44,11 @@ public class AppUserService implements UserDetailsService {
     }
 
 
-    @Cacheable("appUserList")
+    @Cacheable(cacheNames = "appUserList", key = "#root.methodName")
     public List<AppUser> getAppUsers() {
         return appUserRepository.findAll();
     }
+
     public AppUser getAppUser(Long id){
         return appUserRepository
                 .findById(id)
@@ -58,6 +59,7 @@ public class AppUserService implements UserDetailsService {
                 .findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
+
     public void saveAppUser(AppUser appUser){
         String email = appUser.getEmail();
         boolean emailExists  =   appUserRepository.findByEmail(email).isPresent();
