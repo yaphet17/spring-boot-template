@@ -6,6 +6,7 @@ import com.yaphet.springboottemplate.exceptions.PrivilegeNotFoundException;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.repositories.PrivilegeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PrivilegeService {
+
+    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
     public List<Privilege> getAllPrivileges() {
         return privilegeRepository.findAll();
     }
@@ -28,11 +31,15 @@ public class PrivilegeService {
         }
         privilegeRepository.save(privilege);
     }
+
+    @Cacheable(cacheNames = "privileges", key = "#privilegeName")
     public Privilege getPrivilege(String privilegeName){
         return privilegeRepository
                 .findByPrivilegeName(privilegeName)
                 .orElseThrow(() -> new PrivilegeNotFoundException(privilegeName));
     }
+
+    @Cacheable(cacheNames = "privileges", key = "#id")
     public Privilege getPrivilege(Long id){
         return privilegeRepository
                 .findById(id)

@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,25 +40,19 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    @Cacheable(cacheNames = "roles", key = "#roleName")
     public Role getRole(String roleName) {
         return roleRepository
                 .findByRoleName(roleName)
                 .orElseThrow(() -> new RoleNotFoundException(roleName));
     }
 
-    @Cacheable(cacheNames = "roles", key = "#roleName")
     public Role getRole(Long id){
         return roleRepository
                 .findById(id)
                 .orElseThrow(() -> new RoleNotFoundException(id));
     }
 
-    @Caching(evict = {
-            @CacheEvict(cacheNames = "roles", key = "#id", beforeInvocation = false),
-            @CacheEvict(cacheNames = "roles", key = "#result", beforeInvocation = false),
-    }
-    )
+    @CacheEvict(cacheNames = "roles", allEntries = true)
     public String deleteRole(Long id) {
         Role role = roleRepository
                 .findById(id)
@@ -72,10 +65,7 @@ public class RoleService {
         return role.getRoleName();
     }
 
-    @Caching(put = {
-            @CachePut( cacheNames = "roles", key = "#newRole.roleName"),
-            @CachePut( cacheNames = "roles", key = "#newRole.id")
-    })
+    @CacheEvict(cacheNames = "roles", allEntries = true)
     @Transactional
     public boolean updateRole(Role newRole) {
         boolean isUpdated = false;
