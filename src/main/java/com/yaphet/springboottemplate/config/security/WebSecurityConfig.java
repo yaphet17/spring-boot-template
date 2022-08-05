@@ -4,6 +4,7 @@ import com.yaphet.springboottemplate.services.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 
 @Configuration
@@ -38,7 +40,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .and()
                 .rememberMe().userDetailsService(appUserService)
                 .and()
+                .oauth2Login(o -> o
+                        .failureHandler((request, response, exception) -> {
+                            request.getSession().setAttribute("error.message", exception.getMessage());
+                        })
+                )
                 .logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
+
+        http.exceptionHandling(e -> e
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        );
     }
     @Override
     public void configure(AuthenticationManagerBuilder auth){
