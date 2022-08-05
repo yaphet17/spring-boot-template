@@ -1,0 +1,32 @@
+spring:
+  active:
+  config:
+    activate:
+      on-profile: @activatedProperties@
+  mail:
+    host: localhost
+    port: 1025
+    username: root
+    password: root
+    properties:
+      mail:
+        smtp:
+          ssl.trust: '*'
+          auth: true
+          starttls.enable: 5000
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+#  thymeleaf:
+#    cache: false
+  redis:
+    time-to-live: 600000
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+  servlet:
+    session:
+      timeout: 30m
+      cookie.http-only: true
