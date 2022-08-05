@@ -34,11 +34,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/", "/register/**", "/confirm/**", "/login/**").permitAll()
                 .anyRequest()
                 .authenticated().and()
-                .formLogin().defaultSuccessUrl("/home")
+                .formLogin().loginPage("/login").defaultSuccessUrl("/home")
                 .and()
                 .rememberMe().userDetailsService(appUserService)
                 .and()
-                .logout().logoutSuccessUrl("/login");
+                .logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
     }
     @Override
     public void configure(AuthenticationManagerBuilder auth){
