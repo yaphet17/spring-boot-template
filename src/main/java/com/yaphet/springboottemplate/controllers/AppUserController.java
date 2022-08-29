@@ -38,7 +38,7 @@ public class AppUserController {
     public String getAppUsers(Model model,
                               @RequestParam(value = "page", required = false, defaultValue = "1") int currentPage,
                               @RequestParam(value = "size", required = false, defaultValue = "5") int size,
-                              @RequestParam(value = "sort", required = false, defaultValue = "first_name") String sortBy){
+                              @RequestParam(value = "sort", required = false, defaultValue = "firstName") String sortBy){
         Page<AppUser> appUsersPage = appUserService.getAppUsers(currentPage - 1, size, sortBy);
         List<AppUser> appUserList = appUsersPage.getContent();
 
