@@ -14,7 +14,7 @@
     <name>spring-boot-template</name>
     <description>Template for my spring boot applications</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>11</java.version>
     </properties>
     <dependencies>
         <dependency>

@@ -5,8 +5,9 @@ target/
 !**/src/test/**/target/
 
 ### Config files ###
-application-dev.yml
-application-test.yml
+*-dev.yml
+*-test.yml
+
 ### STS ###
 .apt_generated
 .classpath
