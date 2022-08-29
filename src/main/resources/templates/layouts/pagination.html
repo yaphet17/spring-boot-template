@@ -1,0 +1,18 @@
+<div th:fragment="pagination(url)" class="col-md-4 d-flex align-items-center">
+  <nav aria-label="User list pages">
+    [[${currentPage}]] of [[${totalPages}]]
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item"><a class="page-link" th:href="@{${url} + '?page=' + ${i}}" th:text="${i}"></a></li>
+      <li class="page-item">
+        <a class="page-link" th:href="@{${url} + '?page=' + ${i}}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

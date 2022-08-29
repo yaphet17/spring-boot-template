@@ -40,7 +40,8 @@
 
     </div>
     </div>
-<div th:replace="layouts/site :: pagination-footer(url='/user/')">
+<div th:replace="layouts/pagination ::pagination(url='/user/')"></div>
+<div th:insert="layouts/site :: footer">
 </div>
 </body>
 </html>
