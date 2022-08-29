@@ -8,8 +8,10 @@ import com.yaphet.springboottemplate.utilities.SelectedRole;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.yaphet.springboottemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
 
@@ -35,14 +36,15 @@ public class AppUserController {
 
     @GetMapping
     public String getAppUsers(Model model,
-                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                              @RequestParam(value = "size", required = false, defaultValue = "5") int size){
-        Page<AppUser> appUsersPage = appUserService.getAppUsersPage(page, size);
-        List<AppUser> appUserList = appUsersPage.get().collect(Collectors.toList());
+                              @RequestParam(value = "page", required = false, defaultValue = "1") int currentPage,
+                              @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                              @RequestParam(value = "sort", required = false, defaultValue = "first_name") String sortBy){
+        Page<AppUser> appUsersPage = appUserService.getAppUsers(currentPage - 1, size, sortBy);
+        List<AppUser> appUserList = appUsersPage.getContent();
 
         model.addAttribute("appUserList", appUserList);
         model.addAttribute("totalPages", appUsersPage.getTotalPages());
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalElements", appUsersPage.getTotalElements());
         return "appuser/appuser-list";
     }

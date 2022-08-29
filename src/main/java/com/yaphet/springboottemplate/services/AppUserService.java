@@ -8,11 +8,14 @@ import com.yaphet.springboottemplate.models.ConfirmationToken;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
 import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
+
+import org.hibernate.boot.model.source.spi.Sortable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,12 +51,11 @@ public class AppUserService implements UserDetailsService {
 
 
     @Cacheable(cacheNames = "appUserList", key = "#root.methodName")
-    public List<AppUser> getAppUsers() {
-        return appUserRepository.findAll();
-    }
-
-    public Page<AppUser> getAppUsersPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<AppUser> getAppUsers(int currentPage, int size, String sortBy) {
+        PageRequest pageable = PageRequest.of(currentPage,
+                                              size,
+                                              sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
+                                            );
         return appUserRepository.findAll(pageable);
     }
 
