@@ -11,6 +11,7 @@ import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 
 import org.hibernate.boot.model.source.spi.Sortable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,6 +71,7 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
+    @CacheEvict(cacheNames = "appUserList")
     public void saveAppUser(AppUser appUser) {
         String email = appUser.getEmail();
         boolean emailExists  =   appUserRepository.findByEmail(email).isPresent();
@@ -82,6 +84,7 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
     }
 
+    @CacheEvict(cacheNames = "appUserList")
     @Transactional
     public boolean updateAppUser(AppUser au) {
         boolean isUpdated = false;
@@ -121,6 +124,7 @@ public class AppUserService implements UserDetailsService {
         return isUpdated;
     }
 
+    @CacheEvict(cacheNames = "appUserList")
     public void deleteAppUser(Long id) {
         AppUser appUser = appUserRepository
                 .findById(id)
