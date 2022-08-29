@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.yaphet.springboottemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
 
@@ -32,16 +34,23 @@ public class AppUserController {
     private final RoleService roleService;
 
     @GetMapping
-    public String getAppUsers(Model model){
-        List<AppUser> appUserList = appUserService.getAppUsers();
+    public String getAppUsers(Model model,
+                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                              @RequestParam(value = "size", required = false, defaultValue = "5") int size){
+        Page<AppUser> appUsersPage = appUserService.getAppUsersPage(page, size);
+        List<AppUser> appUserList = appUsersPage.get().collect(Collectors.toList());
 
         model.addAttribute("appUserList", appUserList);
+        model.addAttribute("totalPages", appUsersPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalElements", appUsersPage.getTotalElements());
         return "appuser/appuser-list";
     }
 
     @GetMapping("/detail/{id}")
     public String getAppUser(@PathVariable("id") Long id, Model model){
         AppUser appUser = appUserService.getAppUser(id);
+
         model.addAttribute("appUser", appUser);
         return "/appuser/appuser-detail";
     }

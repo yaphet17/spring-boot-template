@@ -10,6 +10,9 @@ import com.yaphet.springboottemplate.repositories.AppUserRepository;
 import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,18 +52,23 @@ public class AppUserService implements UserDetailsService {
         return appUserRepository.findAll();
     }
 
-    public AppUser getAppUser(Long id){
+    public Page<AppUser> getAppUsersPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return appUserRepository.findAll(pageable);
+    }
+
+    public AppUser getAppUser(Long id) {
         return appUserRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
     }
-    public AppUser getAppUser(String email){
+    public AppUser getAppUser(String email) {
         return appUserRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
-    public void saveAppUser(AppUser appUser){
+    public void saveAppUser(AppUser appUser) {
         String email = appUser.getEmail();
         boolean emailExists  =   appUserRepository.findByEmail(email).isPresent();
 
@@ -71,6 +79,7 @@ public class AppUserService implements UserDetailsService {
         appUser.setPassword(encodedPassword);
         appUserRepository.save(appUser);
     }
+
     @Transactional
     public boolean updateAppUser(AppUser au) {
         boolean isUpdated = false;
@@ -122,7 +131,7 @@ public class AppUserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateAppUserRole(AppUser appUser){
+    public void updateAppUserRole(AppUser appUser) {
         String email = appUser.getEmail();
 
         appUserRepository
