@@ -20,6 +20,11 @@ public class PrivilegeService {
         return privilegeRepository.findAll();
     }
 
+    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
+    public List<Privilege> getAllPrivilegePage() {
+        return privilegeRepository.findAll();
+    }
+
     private final PrivilegeRepository privilegeRepository;
 
     public void createPrivilege(Privilege privilege){

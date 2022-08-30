@@ -47,9 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 )
                 .logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
 
-//        http.exceptionHandling(e -> e
-//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-//        );
+        http.exceptionHandling(e -> e
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        );
     }
     @Override
     public void configure(AuthenticationManagerBuilder auth){

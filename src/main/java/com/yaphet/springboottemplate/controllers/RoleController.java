@@ -1,25 +1,34 @@
 package com.yaphet.springboottemplate.controllers;
 
+import static com.yaphet.springboottemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.services.PrivilegeService;
 import com.yaphet.springboottemplate.services.RolePrivilegeService;
 import com.yaphet.springboottemplate.services.RoleService;
 import com.yaphet.springboottemplate.utilities.SelectPrivilege;
+
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.validation.Valid;
-import java.util.List;
-
-import static com.yaphet.springboottemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
 
 @AllArgsConstructor
 @Controller
@@ -34,10 +43,16 @@ public class RoleController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
-    public String roleList(Model model){
-        List<Role> roleList = roleService.getRoles();
+    public String roleList(Model model,
+                           @RequestParam(value = "page", required = false, defaultValue = "1") int currentPage,
+                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        Page<Role> rolesPage = roleService.getRolesByPage(currentPage - 1, size);
+        List<Role> roleList = rolesPage.getContent();
 
-        model.addAttribute("roleList",roleList);
+        model.addAttribute("roleList", roleList);
+        model.addAttribute("totalPages", rolesPage.getTotalPages());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalElements", rolesPage.getTotalElements());
         return "role/role-list";
     }
     @GetMapping("/create")

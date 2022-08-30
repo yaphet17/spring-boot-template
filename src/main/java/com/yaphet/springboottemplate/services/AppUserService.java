@@ -71,7 +71,7 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
-    @CacheEvict(cacheNames = "appUserList")
+//    @CacheEvict(cacheNames = "appUserList")
     public void saveAppUser(AppUser appUser) {
         String email = appUser.getEmail();
         boolean emailExists  =   appUserRepository.findByEmail(email).isPresent();
@@ -84,7 +84,7 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
     }
 
-    @CacheEvict(cacheNames = "appUserList")
+//    @CacheEvict(cacheNames = "appUserList")
     @Transactional
     public boolean updateAppUser(AppUser au) {
         boolean isUpdated = false;
@@ -124,7 +124,7 @@ public class AppUserService implements UserDetailsService {
         return isUpdated;
     }
 
-    @CacheEvict(cacheNames = "appUserList")
+//    @CacheEvict(cacheNames = "appUserList")
     public void deleteAppUser(Long id) {
         AppUser appUser = appUserRepository
                 .findById(id)
