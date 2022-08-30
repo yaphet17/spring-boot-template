@@ -118,7 +118,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('ROLE-CREATE')")
     public String assignPrivilegeForm(@PathVariable("id") Long id, Model model){
         Role role = roleService.getRole(id);
-        List<Privilege> privilegeList = privilegeService.getAllPrivileges();
+        List<Privilege> privilegeList = privilegeService.getPrivileges();
         model.addAttribute("role", role);
         model.addAttribute("selectedPrivilege", new SelectPrivilege(privilegeList));
         return "role/assign-privilege";

@@ -5,8 +5,14 @@ import com.yaphet.springboottemplate.exceptions.PrivilegeAlreadyExistsException;
 import com.yaphet.springboottemplate.exceptions.PrivilegeNotFoundException;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.repositories.PrivilegeRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,37 +21,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PrivilegeService {
 
-    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
-    public List<Privilege> getAllPrivileges() {
-        return privilegeRepository.findAll();
-    }
-
-    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
-    public List<Privilege> getAllPrivilegePage() {
-        return privilegeRepository.findAll();
-    }
-
     private final PrivilegeRepository privilegeRepository;
 
-    public void createPrivilege(Privilege privilege){
+    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
+    public List<Privilege> getPrivileges() {
+        return privilegeRepository.findAll();
+    }
+
+    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
+    public Page<Privilege> getPrivilegesByPage(int currentPage, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(currentPage,
+                                            size,
+                                            sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
+                                           );
+        return privilegeRepository.findAll(pageable);
+    }
+
+    public void createPrivilege(Privilege privilege) {
         String privilegeName = privilege.getPrivilegeName();
         boolean privilegeExists = privilegeRepository.findByPrivilegeName(privilegeName).isPresent();
 
-        if(privilegeExists){
+        if (privilegeExists) {
             throw new PrivilegeAlreadyExistsException(privilegeName);
         }
         privilegeRepository.save(privilege);
     }
 
     @Cacheable(cacheNames = "privileges", key = "#privilegeName")
-    public Privilege getPrivilege(String privilegeName){
+    public Privilege getPrivilege(String privilegeName) {
         return privilegeRepository
                 .findByPrivilegeName(privilegeName)
                 .orElseThrow(() -> new PrivilegeNotFoundException(privilegeName));
     }
 
     @Cacheable(cacheNames = "privileges", key = "#id")
-    public Privilege getPrivilege(Long id){
+    public Privilege getPrivilege(Long id) {
         return privilegeRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Privilege", id));
