@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +45,11 @@ public class RoleService {
     }
 
     @Cacheable(cacheNames = "roles", key = "#root.methodName")
-    public Page<Role> getRolesByPage(int currentPage, int size) {
-        Pageable pageable = PageRequest.of(currentPage, size);
+    public Page<Role> getRolesByPage(int currentPage, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(currentPage,
+                                            size,
+                                            sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
+                                           );
         return roleRepository.findAll(pageable);
     }
 

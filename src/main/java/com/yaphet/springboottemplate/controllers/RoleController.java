@@ -45,8 +45,9 @@ public class RoleController {
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     public String roleList(Model model,
                            @RequestParam(value = "page", required = false, defaultValue = "1") int currentPage,
-                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-        Page<Role> rolesPage = roleService.getRolesByPage(currentPage - 1, size);
+                           @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                           @RequestParam(value = "sort", required = false, defaultValue = "roleName") String sortBy) {
+        Page<Role> rolesPage = roleService.getRolesByPage(currentPage - 1, size, sortBy);
         List<Role> roleList = rolesPage.getContent();
 
         model.addAttribute("roleList", roleList);
