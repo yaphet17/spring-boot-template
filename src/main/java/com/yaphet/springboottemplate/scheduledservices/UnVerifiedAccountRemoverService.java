@@ -19,7 +19,6 @@ public class UnVerifiedAccountRemoverService {
     @Scheduled(fixedDelayString = "${app.spring-boot-template.unverified-account-remover.delay}", timeUnit = TimeUnit.DAYS)
     public void removeUnverifiedAccounts() {
         appUserService.removeUnVerifiedUsers();
-        System.out.println("Unverified accounts removed");
         // TODO: log this
     }
 
