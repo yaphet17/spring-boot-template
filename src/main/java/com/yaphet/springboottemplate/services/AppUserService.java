@@ -136,6 +136,10 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.deleteById(id);
     }
 
+    public void removeUnVerifiedUsers() {
+        appUserRepository.deleteAllByEnabledIsFalse();
+    }
+
     @Transactional
     public void updateAppUserRole(AppUser appUser) {
         String email = appUser.getEmail();

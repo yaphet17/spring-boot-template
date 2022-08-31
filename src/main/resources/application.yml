@@ -30,3 +30,7 @@ server:
     session:
       timeout: 30m
       cookie.http-only: true
+app:
+  spring-boot-template:
+    unverified-account-remover:
+      delay: 3
