@@ -139,8 +139,9 @@ public class AppUserService implements UserDetailsService {
          return appUserRepository.deleteAllUnverifiedUsers(LocalDateTime.now().minusDays(3));
     }
 
-    public void updateAuthenticationType(String username,  String oauth2ClientName) {
-        appUserRepository.updateAuthType(username, AuthenticationType.valueOf(oauth2ClientName.toUpperCase()));
+    @Transactional
+    public void updateAuthenticationType(String username,  String authType) {
+        appUserRepository.updateAuthType(username, AuthenticationType.valueOf(authType.toUpperCase()));
     }
 
     @Transactional
@@ -167,12 +168,14 @@ public class AppUserService implements UserDetailsService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         return token;
     }
+
     public void enableAppUser(String email) {
        appUserRepository
                .findByEmail(email)
                .orElseThrow(() -> new EmailNotFoundException(email));
         appUserRepository.enableAppUser(email);
     }
+
     @Override
     public UserDetails loadUserByUsername(String email) {
         return appUserRepository.findByEmail(email)

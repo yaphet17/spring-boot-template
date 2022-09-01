@@ -25,6 +25,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         appUserService.updateAuthenticationType(customOAuth2User.getEmail(), customOAuth2User.getOauth2ClientName());
+        setDefaultTargetUrl("/home");
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
