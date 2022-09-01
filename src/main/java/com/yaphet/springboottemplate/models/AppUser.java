@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.yaphet.springboottemplate.utilities.AuthenticationType;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -59,6 +61,8 @@ public class AppUser implements Serializable {
             )
     )
     private Set<Role> roles = new HashSet<>();
+    @Column(name = "auth_type", nullable = false)
+    private AuthenticationType authType;
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt = LocalDateTime.now();

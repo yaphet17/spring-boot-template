@@ -1,9 +1,11 @@
-package com.yaphet.springboottemplate.utilities.dbintializer;
+package com.yaphet.springboottemplate.utilities.seeder;
 
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.services.*;
+import com.yaphet.springboottemplate.utilities.AuthenticationType;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -71,6 +73,7 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
         adminAppUser.setUserName("admin@admin.com");
         adminAppUser.setPassword("admin");
         adminAppUser.setRoles(roles);
+        adminAppUser.setAuthType(AuthenticationType.LOCAL);
         adminAppUser.setEnabled(true);
         appUserService.saveAppUser(adminAppUser);
 
@@ -82,6 +85,7 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
         user.setUserName("user@user.com");
         user.setPassword("user");
         user.setRoles(Set.of(roleService.getRole("ROLE_USER")));
+        user.setAuthType(AuthenticationType.LOCAL);
         user.setEnabled(true);
         appUserService.saveAppUser(user);
 
