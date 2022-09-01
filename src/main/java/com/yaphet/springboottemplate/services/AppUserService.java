@@ -10,13 +10,10 @@ import com.yaphet.springboottemplate.repositories.AppUserRepository;
 import com.yaphet.springboottemplate.utilities.AuthenticationType;
 import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 
-import org.hibernate.boot.model.source.spi.Sortable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -140,7 +136,7 @@ public class AppUserService implements UserDetailsService {
     @Transactional
     public int removeUnVerifiedUsers() {
         // remove users that have not been verified after 3 days
-         return appUserRepository.deleteAllByEnabledIsFalse(LocalDateTime.now().minusDays(3));
+         return appUserRepository.deleteAllUnverifiedUsers(LocalDateTime.now().minusDays(3));
     }
 
     public void updateAuthenticationType(String username,  String oauth2ClientName) {

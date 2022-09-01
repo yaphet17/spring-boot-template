@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Query("SELECT a FROM AppUser a WHERE a.email=?1 AND a.deleted=FALSE ")
@@ -30,7 +28,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     List<AppUser> findAllByEnabledIsFalse();
 
     @Modifying
-    @Query("DELETE FROM AppUser a WHERE a.enabled=FALSE AND a.createdAt < ?1")
-    int deleteAllByEnabledIsFalse(LocalDateTime dateTime);
+    @Query("DELETE FROM AppUser a WHERE a.enabled = FALSE AND a.createdAt < ?1")
+    int deleteAllUnverifiedUsers(LocalDateTime dateTime);
 }
 
