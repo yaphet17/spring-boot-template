@@ -33,4 +33,4 @@ server:
 app:
   spring-boot-template:
     unverified-account-remover:
-      delay: 3
+      delay: 1

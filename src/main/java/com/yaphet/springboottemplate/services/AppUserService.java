@@ -7,6 +7,7 @@ import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.ConfirmationToken;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
+import com.yaphet.springboottemplate.utilities.AuthenticationType;
 import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 
 import org.hibernate.boot.model.source.spi.Sortable;
@@ -136,8 +137,14 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.deleteById(id);
     }
 
-    public void removeUnVerifiedUsers() {
-        appUserRepository.deleteAllByEnabledIsFalse();
+    @Transactional
+    public int removeUnVerifiedUsers() {
+        // remove users that have not been verified after 3 days
+         return appUserRepository.deleteAllByEnabledIsFalse(LocalDateTime.now().minusDays(3));
+    }
+
+    public void updateAuthenticationType(String username,  String oauth2ClientName) {
+        appUserRepository.updateAuthType(username, AuthenticationType.valueOf(oauth2ClientName.toUpperCase()));
     }
 
     @Transactional
