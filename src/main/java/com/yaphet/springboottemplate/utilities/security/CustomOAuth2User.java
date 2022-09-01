@@ -6,12 +6,18 @@ import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class CustomOAuth2User implements OAuth2User {
+import com.yaphet.springboottemplate.models.AppUser;
 
-    private String oauth2ClientName;
-    private OAuth2User oauth2User;
+public class CustomOAuth2User extends  AppUserDetails implements OAuth2User {
 
-    public CustomOAuth2User(String oauth2ClientName, OAuth2User oauth2User) {
+
+    private final AppUser appUser;
+    private final String oauth2ClientName;
+    private final OAuth2User oauth2User;
+
+    public CustomOAuth2User(AppUser appUser, String oauth2ClientName, OAuth2User oauth2User) {
+        super(appUser);
+        this.appUser = appUser;
         this.oauth2ClientName = oauth2ClientName;
         this.oauth2User = oauth2User;
     }
@@ -23,7 +29,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return oauth2User.getAuthorities();
+        return super.getAuthorities();
     }
 
     @Override

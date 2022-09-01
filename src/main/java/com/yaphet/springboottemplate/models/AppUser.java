@@ -37,13 +37,13 @@ public class AppUser implements Serializable {
     private Long id;
     @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
     private String userName;
     @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
     @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

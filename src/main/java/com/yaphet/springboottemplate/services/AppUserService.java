@@ -34,6 +34,7 @@ public class AppUserService implements UserDetailsService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
+    private final RoleService roleService;
     private final String USER_NOT_FOUND_MSG = "user with %s not found";
     private final String RESOURCE_NAME = "App user";
     private final int TOKEN_EXPIRATION_DELAY = 15;
@@ -41,10 +42,11 @@ public class AppUserService implements UserDetailsService {
     @Autowired
     public AppUserService(BCryptPasswordEncoder passwordEncoder,
                           AppUserRepository appUserRepository,
-                          ConfirmationTokenService confirmationTokenService) {
+                          ConfirmationTokenService confirmationTokenService, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.appUserRepository = appUserRepository;
         this.confirmationTokenService = confirmationTokenService;
+        this.roleService = roleService;
     }
 
 
@@ -76,6 +78,11 @@ public class AppUserService implements UserDetailsService {
         if(emailExists){
             throw new EmailAlreadyExistsException(email);
         }
+
+        if(appUser.getRoles() == null){
+            appUser.setRoles(Set.of(roleService.getRole("ROLE_USER")));
+        }
+
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
         appUserRepository.save(appUser);
@@ -183,4 +190,7 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 
+    public boolean isUserExists(String email) {
+        return appUserRepository.findByEmail(email).isPresent();
+    }
 }
