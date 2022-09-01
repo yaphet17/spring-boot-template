@@ -64,11 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .failureHandler((request, response, exception) -> {
                         request.getSession().setAttribute("error.message", exception.getMessage());})
                 .and()
-                .logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
-
-        http.exceptionHandling(e -> e
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-        );
+                .logout()
+                    .logoutSuccessUrl("/login")
+                    .deleteCookies("JSESSIONID");
     }
 
     @Override
