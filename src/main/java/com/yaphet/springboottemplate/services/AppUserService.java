@@ -83,8 +83,11 @@ public class AppUserService implements UserDetailsService {
             appUser.setRoles(Set.of(roleService.getRole("ROLE_USER")));
         }
 
-        String encodedPassword = passwordEncoder.encode(appUser.getPassword());
-        appUser.setPassword(encodedPassword);
+        if(appUser.getPassword() != null){
+            String encodedPassword = passwordEncoder.encode(appUser.getPassword());
+            appUser.setPassword(encodedPassword);
+        }
+
         appUserRepository.save(appUser);
     }
 
