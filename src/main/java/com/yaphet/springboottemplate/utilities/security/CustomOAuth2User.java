@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.yaphet.springboottemplate.models.AppUser;
 
-public class CustomOAuth2User extends  AppUserDetails implements OAuth2User {
+public class CustomOAuth2User extends AppUserDetails implements OAuth2User {
 
 
     private final AppUser appUser;

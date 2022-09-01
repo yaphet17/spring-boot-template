@@ -53,9 +53,9 @@ public class AppUserService implements UserDetailsService {
     @Cacheable(cacheNames = "appUserList", key = "#root.methodName")
     public Page<AppUser> getAppUsers(int currentPage, int size, String sortBy) {
         PageRequest pageable = PageRequest.of(currentPage,
-                                              size,
-                                              sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
-                                            );
+                size,
+                sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
+        );
         return appUserRepository.findAll(pageable);
     }
 
@@ -64,26 +64,27 @@ public class AppUserService implements UserDetailsService {
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
     }
+
     public AppUser getAppUser(String email) {
         return appUserRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
-//    @CacheEvict(cacheNames = "appUserList")
+    //    @CacheEvict(cacheNames = "appUserList")
     public void saveAppUser(AppUser appUser) {
         String email = appUser.getEmail();
-        boolean emailExists  =   appUserRepository.findByEmail(email).isPresent();
+        boolean emailExists = appUserRepository.findByEmail(email).isPresent();
 
-        if(emailExists){
+        if (emailExists) {
             throw new EmailAlreadyExistsException(email);
         }
 
-        if(appUser.getRoles() == null){
+        if (appUser.getRoles() == null) {
             appUser.setRoles(Set.of(roleService.getRole("ROLE_USER")));
         }
 
-        if(appUser.getPassword() != null){
+        if (appUser.getPassword() != null) {
             String encodedPassword = passwordEncoder.encode(appUser.getPassword());
             appUser.setPassword(encodedPassword);
         }
@@ -91,53 +92,53 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
     }
 
-//    @CacheEvict(cacheNames = "appUserList")
+    //    @CacheEvict(cacheNames = "appUserList")
     @Transactional
     public boolean updateAppUser(AppUser au) {
         boolean isUpdated = false;
         String newEmail = au.getEmail();
         String firstName = au.getFirstName();
         String lastName = au.getLastName();
-        AppUser appUser = ((AppUserDetails)SecurityContextHolder
+        AppUser appUser = ((AppUserDetails) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal()).getAppUser();
 
-        if(newEmail != null &&
+        if (newEmail != null &&
                 newEmail.length() > 0 &&
-                !Objects.equals(newEmail, appUser.getEmail())){
-            if(appUserRepository.findByEmail(newEmail).isPresent()){
+                !Objects.equals(newEmail, appUser.getEmail())) {
+            if (appUserRepository.findByEmail(newEmail).isPresent()) {
                 throw new EmailAlreadyExistsException(newEmail);
             }
             appUser.setEmail(newEmail);
             isUpdated = true;
         }
 
-        if(firstName != null &&
+        if (firstName != null &&
                 firstName.length() > 0 &&
-                !Objects.equals(appUser.getFirstName(), firstName)){
+                !Objects.equals(appUser.getFirstName(), firstName)) {
             appUser.setFirstName(firstName);
             isUpdated = true;
         }
-        if(lastName != null &&
+        if (lastName != null &&
                 lastName.length() > 0 &&
-                !Objects.equals(appUser.getLastName(), lastName)){
+                !Objects.equals(appUser.getLastName(), lastName)) {
             appUser.setLastName(lastName);
             isUpdated = true;
         }
-        if(isUpdated){
+        if (isUpdated) {
             appUserRepository.save(appUser);
         }
         return isUpdated;
     }
 
-//    @CacheEvict(cacheNames = "appUserList")
+    //    @CacheEvict(cacheNames = "appUserList")
     public void deleteAppUser(Long id) {
         AppUser appUser = appUserRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
         Set<Role> appUserRoles = appUser.getRoles();
-        for(Role role : appUserRoles){
+        for (Role role : appUserRoles) {
             role.removeAppUser(appUser);
         }
         appUserRepository.deleteById(id);
@@ -146,11 +147,11 @@ public class AppUserService implements UserDetailsService {
     @Transactional
     public int removeUnVerifiedUsers() {
         // remove users that have not been verified after 3 days
-         return appUserRepository.deleteAllUnverifiedUsers(LocalDateTime.now().minusDays(3));
+        return appUserRepository.deleteAllUnverifiedUsers(LocalDateTime.now().minusDays(3));
     }
 
     @Transactional
-    public void updateAuthenticationType(String username,  String authType) {
+    public void updateAuthenticationType(String username, String authType) {
         appUserRepository.updateAuthType(username, AuthenticationType.valueOf(authType.toUpperCase()));
     }
 
@@ -165,7 +166,7 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
-    public String signUpUser(AppUser appUser){
+    public String signUpUser(AppUser appUser) {
         String encodedPassword = passwordEncoder.encode(appUser.getPassword());
         String token = UUID.randomUUID().toString();
 
@@ -180,9 +181,9 @@ public class AppUserService implements UserDetailsService {
     }
 
     public void enableAppUser(String email) {
-       appUserRepository
-               .findByEmail(email)
-               .orElseThrow(() -> new EmailNotFoundException(email));
+        appUserRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new EmailNotFoundException(email));
         appUserRepository.enableAppUser(email);
     }
 
