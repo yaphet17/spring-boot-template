@@ -7,6 +7,8 @@ target/
 ### Config files ###
 *-dev.yml
 *-test.yml
+flyway.conf
+
 
 ### STS ###
 .apt_generated
