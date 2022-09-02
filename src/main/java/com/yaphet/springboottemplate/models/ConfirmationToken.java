@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -42,8 +44,14 @@ public class ConfirmationToken implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String token;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt;
+    @Column(name = "modified_at")
+    @LastModifiedDate
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime modifiedAt;
     @Future
     @Column(name = "expires_at", nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
