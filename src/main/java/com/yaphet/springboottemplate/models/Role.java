@@ -7,9 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Set;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @NoArgsConstructor
 @Getter
@@ -35,7 +39,6 @@ public class Role implements Serializable {
     private String roleName;
     @Column(name = "role_description")
     private String roleDescription;
-
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<AppUser> appUsers;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, fetch = FetchType.EAGER)
@@ -51,6 +54,14 @@ public class Role implements Serializable {
             )
     )
     private Set<Privilege> privileges;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "modified_at")
+    @LastModifiedDate
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime modifiedAt;
 
     public Role(String roleName, String roleDescription, Set<Privilege> privileges) {
         this.roleName = roleName;
