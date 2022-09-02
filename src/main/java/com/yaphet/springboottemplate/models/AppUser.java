@@ -25,7 +25,7 @@ import com.yaphet.springboottemplate.security.AuthenticationType;
 @Setter
 @Entity
 @Table(name = "app_users")
-@SQLDelete(sql = "UPDATE app_users SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE app_users SET deleted = true WHERE appuser_id = ?")
 @Where(clause = "deleted = false")
 public class AppUser implements Serializable {
 
@@ -67,7 +67,7 @@ public class AppUser implements Serializable {
             )
     )
     private Set<Role> roles = new HashSet<>();
-    @Column(name = "auth_type", nullable = false)
+    @Column(name = "auth_type")
     private AuthenticationType authType;
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

@@ -9,9 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +27,7 @@ import static com.yaphet.springboottemplate.controllers.error.CustomErrorControl
 @RequestMapping("user")
 @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
 public class AppUserController {
-    private static final Logger log = LogManager.getLogger(AppUserController.class);
+    private static final Logger logger = LogManager.getLogger(AppUserController.class);
     private final AppUserService appUserService;
     private final RoleService roleService;
 
@@ -66,13 +63,15 @@ public class AppUserController {
         model.addAttribute("selectedRole", new SelectedRole(roleList));
         return "appuser/create-appuser";
     }
+
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute AppUser appUser,
                          @Valid @ModelAttribute SelectedRole selectedRole,
                          BindingResult result,
                          RedirectAttributes redirectAttr){
+        logger.debug("Controller: Saving app user: {}", appUser.getEmail());
         if(result.hasErrors()){
-            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
+            logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:user/create";
         }
         appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
@@ -107,7 +106,7 @@ public class AppUserController {
 
         redirectAttributes.addAttribute("id", id);
         if(result.hasErrors()){
-            log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
+            logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:/user/assign-role/{id}";
         }
         appUser.setRoles(new HashSet<>(selectedRoles.getSelectedRoles()));

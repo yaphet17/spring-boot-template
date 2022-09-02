@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,8 @@ import com.yaphet.springboottemplate.security.AppUserDetails;
 
 @Service
 public class AppUserService implements UserDetailsService {
+
+    private Logger logger = LogManager.getLogger(AppUserService.class);
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
@@ -72,6 +76,7 @@ public class AppUserService implements UserDetailsService {
 
     //    @CacheEvict(cacheNames = "appUserList")
     public void saveAppUser(AppUser appUser) {
+        logger.debug("Saving app user: {}", appUser.getEmail());
         String email = appUser.getEmail();
         boolean emailExists = appUserRepository.findByEmail(email).isPresent();
 
@@ -88,7 +93,12 @@ public class AppUserService implements UserDetailsService {
             appUser.setPassword(encodedPassword);
         }
 
+        if(appUser.getAuthType() == null){
+            appUser.setAuthType(AuthenticationType.LOCAL);
+        }
+
         appUserRepository.save(appUser);
+        logger.info("New user registered: {}", appUser.getEmail());
     }
 
     //    @CacheEvict(cacheNames = "appUserList")
