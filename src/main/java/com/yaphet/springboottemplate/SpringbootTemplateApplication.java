@@ -15,7 +15,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
                 "com.yaphet.springboottemplate.services",
                 "com.yaphet.springboottemplate.scheduledservices",
                 "com.yaphet.springboottemplate.utilities",
-                "com.yaphet.springboottemplate.config.security"
+                "com.yaphet.springboottemplate.config.security",
+                "com.yaphet.springboottemplate.security"
 
         })
 @EnableCaching

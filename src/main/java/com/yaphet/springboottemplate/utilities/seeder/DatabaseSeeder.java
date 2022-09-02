@@ -4,7 +4,7 @@ import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.services.*;
-import com.yaphet.springboottemplate.utilities.AuthenticationType;
+import com.yaphet.springboottemplate.security.AuthenticationType;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;

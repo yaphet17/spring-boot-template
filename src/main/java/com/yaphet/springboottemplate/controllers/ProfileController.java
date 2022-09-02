@@ -3,7 +3,7 @@ package com.yaphet.springboottemplate.controllers;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.services.AppUserService;
 import com.yaphet.springboottemplate.services.ProfileService;
-import com.yaphet.springboottemplate.utilities.security.ChangePassword;
+import com.yaphet.springboottemplate.security.ChangePassword;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

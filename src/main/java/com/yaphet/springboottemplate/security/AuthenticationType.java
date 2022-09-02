@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.utilities;
+package com.yaphet.springboottemplate.security;
 
 public enum AuthenticationType {
     LOCAL, GOOGLE

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.yaphet.springboottemplate.utilities.AuthenticationType;
+import com.yaphet.springboottemplate.security.AuthenticationType;
 
 @NoArgsConstructor
 @Getter

@@ -7,8 +7,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.yaphet.springboottemplate.models.AppUser;
-import com.yaphet.springboottemplate.utilities.AuthenticationType;
-import com.yaphet.springboottemplate.utilities.security.CustomOAuth2User;
+import com.yaphet.springboottemplate.security.AuthenticationType;
+import com.yaphet.springboottemplate.security.CustomOAuth2User;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {

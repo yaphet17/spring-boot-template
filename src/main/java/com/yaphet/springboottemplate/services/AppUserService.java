@@ -24,8 +24,8 @@ import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.ConfirmationToken;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
-import com.yaphet.springboottemplate.utilities.AuthenticationType;
-import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
+import com.yaphet.springboottemplate.security.AuthenticationType;
+import com.yaphet.springboottemplate.security.AppUserDetails;
 
 @Service
 public class AppUserService implements UserDetailsService {

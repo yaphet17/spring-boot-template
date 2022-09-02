@@ -6,7 +6,6 @@ import com.yaphet.springboottemplate.exceptions.TokenExpiredException;
 import com.yaphet.springboottemplate.exceptions.TokenNotFoundException;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.ConfirmationToken;
-import com.yaphet.springboottemplate.utilities.email.EmailService;
 import com.yaphet.springboottemplate.utilities.email.EmailValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

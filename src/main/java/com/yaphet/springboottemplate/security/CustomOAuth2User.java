@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.utilities.security;
+package com.yaphet.springboottemplate.security;
 
 import java.util.Collection;
 import java.util.Map;

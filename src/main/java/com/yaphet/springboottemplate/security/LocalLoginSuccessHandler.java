@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.utilities.security;
+package com.yaphet.springboottemplate.security;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.yaphet.springboottemplate.utilities.email;
+package com.yaphet.springboottemplate.services;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import com.yaphet.springboottemplate.utilities.email.EmailSender;
 
 
 @AllArgsConstructor
 @Service
-public class EmailService implements EmailSender{
+public class EmailService implements EmailSender {
     private final JavaMailSender javaMailSender;
     private final static Logger LOGGER= LoggerFactory.getLogger(EmailService.class);
     @Override
