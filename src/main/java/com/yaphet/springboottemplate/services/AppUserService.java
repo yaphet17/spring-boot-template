@@ -1,17 +1,11 @@
 package com.yaphet.springboottemplate.services;
 
-import com.yaphet.springboottemplate.exceptions.EmailAlreadyExistsException;
-import com.yaphet.springboottemplate.exceptions.EmailNotFoundException;
-import com.yaphet.springboottemplate.exceptions.IdNotFoundException;
-import com.yaphet.springboottemplate.models.AppUser;
-import com.yaphet.springboottemplate.models.ConfirmationToken;
-import com.yaphet.springboottemplate.models.Role;
-import com.yaphet.springboottemplate.repositories.AppUserRepository;
-import com.yaphet.springboottemplate.utilities.AuthenticationType;
-import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,10 +17,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import com.yaphet.springboottemplate.exceptions.EmailAlreadyExistsException;
+import com.yaphet.springboottemplate.exceptions.EmailNotFoundException;
+import com.yaphet.springboottemplate.exceptions.IdNotFoundException;
+import com.yaphet.springboottemplate.models.AppUser;
+import com.yaphet.springboottemplate.models.ConfirmationToken;
+import com.yaphet.springboottemplate.models.Role;
+import com.yaphet.springboottemplate.repositories.AppUserRepository;
+import com.yaphet.springboottemplate.utilities.AuthenticationType;
+import com.yaphet.springboottemplate.utilities.security.AppUserDetails;
 
 @Service
 public class AppUserService implements UserDetailsService {
@@ -167,7 +166,6 @@ public class AppUserService implements UserDetailsService {
     }
 
     public String signUpUser(AppUser appUser) {
-        String encodedPassword = passwordEncoder.encode(appUser.getPassword());
         String token = UUID.randomUUID().toString();
 
         saveAppUser(appUser);
