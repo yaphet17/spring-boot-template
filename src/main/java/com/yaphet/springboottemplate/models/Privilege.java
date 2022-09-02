@@ -5,13 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Set;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "privileges")
 public class Privilege implements Serializable {
     @Id
@@ -31,16 +35,17 @@ public class Privilege implements Serializable {
 
     @ManyToMany(mappedBy = "privileges")
     private Set<Role> roles;
-    public Privilege(String privilegeName){
+
+    public Privilege(String privilegeName) {
         this.privilegeName = privilegeName;
     }
 
-    public void addRole(Role role){
+    public void addRole(Role role) {
         roles.add(role);
         role.getPrivileges().add(this);
     }
 
-    public void removeRole(Role role){
+    public void removeRole(Role role) {
         roles.remove(role);
         role.getPrivileges().remove(this);
     }

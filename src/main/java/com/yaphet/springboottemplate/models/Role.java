@@ -5,13 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Set;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "roles")
 public class Role implements Serializable {
 
@@ -32,37 +36,37 @@ public class Role implements Serializable {
     @Column(name = "role_description")
     private String roleDescription;
 
-    @ManyToMany(mappedBy =  "roles", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<AppUser> appUsers;
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
-            name ="role_privileges",
+            name = "role_privileges",
             joinColumns = @JoinColumn(
-                    name ="role_id",
+                    name = "role_id",
                     referencedColumnName = "role_id"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name ="privilege_id",
+                    name = "privilege_id",
                     referencedColumnName = "privilege_id"
             )
     )
     private Set<Privilege> privileges;
 
-    public Role(String roleName, String roleDescription, Set<Privilege> privileges){
+    public Role(String roleName, String roleDescription, Set<Privilege> privileges) {
         this.roleName = roleName;
         this.roleDescription = roleDescription;
         this.privileges = privileges;
     }
 
-    public void addAppUser(AppUser appUser){
+    public void addAppUser(AppUser appUser) {
         appUsers.add(appUser);
         appUser.getRoles().add(this);
     }
-    public void removeAppUser(AppUser appUser){
+
+    public void removeAppUser(AppUser appUser) {
         appUsers.remove(appUser);
         appUser.getRoles().remove(this);
     }
-
 
 
 }
