@@ -50,7 +50,7 @@ public class AppUserService implements UserDetailsService {
     }
 
 
-    @Cacheable(cacheNames = "appUserList", key = "#root.methodName")
+//    @Cacheable(cacheNames = "appUserList", key = "#root.methodName")
     public Page<AppUser> getAppUsers(int currentPage, int size, String sortBy) {
         PageRequest pageable = PageRequest.of(currentPage,
                 size,
