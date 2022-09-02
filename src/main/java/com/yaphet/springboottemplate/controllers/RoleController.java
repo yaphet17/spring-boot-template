@@ -99,7 +99,6 @@ public class RoleController {
             log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
            return "redirect:/role/edit/{id}";
        }
-        //if role is updated return success message else redirect back to update form
         if(roleService.updateRole(role)){
             redirectAttr.addAttribute("success","successfully updated");
         }else{

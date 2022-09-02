@@ -39,12 +39,12 @@ public class RoleService {
         roleRepository.save(role);
     }
 
-    @Cacheable(cacheNames = "roles", key = "#root.methodName")
+//    @Cacheable(cacheNames = "roles", key = "#root.methodName")
     public List<Role> getRoles() {
         return roleRepository.findAll();
     }
 
-    @Cacheable(cacheNames = "roles", key = "#root.methodName")
+//    @Cacheable(cacheNames = "roles", key = "#root.methodName")
     public Page<Role> getRolesByPage(int currentPage, int size, String sortBy) {
         Pageable pageable = PageRequest.of(currentPage,
                                             size,
@@ -65,7 +65,7 @@ public class RoleService {
                 .orElseThrow(() -> new RoleNotFoundException(id));
     }
 
-    @CacheEvict(cacheNames = "roles", allEntries = true)
+//    @CacheEvict(cacheNames = "roles", allEntries = true)
     public String deleteRole(Long id) {
         Role role = roleRepository
                 .findById(id)
@@ -78,7 +78,7 @@ public class RoleService {
         return role.getRoleName();
     }
 
-    @CacheEvict(cacheNames = "roles", allEntries = true)
+//    @CacheEvict(cacheNames = "roles", allEntries = true)
     @Transactional
     public boolean updateRole(Role newRole) {
         boolean isUpdated = false;
@@ -92,7 +92,6 @@ public class RoleService {
                 newRole.getRoleName().length() > 0 &&
                 !Objects.equals(updatedRole.getRoleName(), newRole.getRoleName())){
             updatedRole.setRoleName(newRole.getRoleName());
-
             isUpdated = true;
         }
         if(newRole.getRoleDescription() != null &&
@@ -101,10 +100,11 @@ public class RoleService {
             updatedRole.setRoleDescription(newRole.getRoleDescription());
             isUpdated = true;
         }
+
         if(isUpdated){
             roleRepository.save(updatedRole);
             Set<Privilege> privileges = oldRole.getPrivileges();
-            if(privileges != null){
+            if(!privileges.isEmpty()){
                 for(Privilege privilege : privileges){
                     privilege.removeRole(oldRole);
                 }
