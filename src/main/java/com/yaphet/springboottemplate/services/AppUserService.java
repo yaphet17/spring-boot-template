@@ -76,7 +76,6 @@ public class AppUserService implements UserDetailsService {
 
     //    @CacheEvict(cacheNames = "appUserList")
     public void saveAppUser(AppUser appUser) {
-        logger.debug("Saving app user: {}", appUser.getEmail());
         String email = appUser.getEmail();
         boolean emailExists = appUserRepository.findByEmail(email).isPresent();
 
@@ -98,7 +97,6 @@ public class AppUserService implements UserDetailsService {
         }
 
         appUserRepository.save(appUser);
-        logger.info("New user registered: {}", appUser.getEmail());
     }
 
     //    @CacheEvict(cacheNames = "appUserList")

@@ -69,7 +69,6 @@ public class AppUserController {
                          @Valid @ModelAttribute SelectedRole selectedRole,
                          BindingResult result,
                          RedirectAttributes redirectAttr){
-        logger.debug("Controller: Saving app user: {}", appUser.getEmail());
         if(result.hasErrors()){
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:user/create";
