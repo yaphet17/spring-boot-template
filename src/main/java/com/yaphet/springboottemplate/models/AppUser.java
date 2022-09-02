@@ -3,6 +3,10 @@ package com.yaphet.springboottemplate.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLDeleteAll;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -21,6 +25,8 @@ import com.yaphet.springboottemplate.security.AuthenticationType;
 @Setter
 @Entity
 @Table(name = "app_users")
+@SQLDelete(sql = "UPDATE app_users SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class AppUser implements Serializable {
 
     @Id
