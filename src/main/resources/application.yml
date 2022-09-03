@@ -39,4 +39,6 @@ app:
   spring-boot-template:
     unverified-account-remover:
       delay: 1
+    mail:
+      from: "root@rootmail.com"
 

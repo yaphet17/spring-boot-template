@@ -42,6 +42,7 @@ public class RegistrationService {
         String link = BASE_URL + "/confirm?token=" + token;
         emailSender.send(
                 appUser.getEmail(),
+                "Confirm your email",
                 buildEmail(appUser.getFirstName() + " "+appUser.getLastName(), link)
         );
     }
