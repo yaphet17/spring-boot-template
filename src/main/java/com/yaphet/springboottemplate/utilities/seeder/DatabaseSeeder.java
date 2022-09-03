@@ -35,6 +35,11 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
             return;
         }
 
+        if(!privilegeService.getPrivileges().isEmpty()){
+            alreadySetup = true;
+            return;
+        }
+
         //create default privilege
         Set<Privilege> privileges = new HashSet<>();
         privileges.add(new Privilege("ROLE-CREATE"));
