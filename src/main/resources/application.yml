@@ -26,7 +26,7 @@ spring:
     baseline-on-migrate: true
     postgresql:
       schemas: springboot_template
-    clean-disabled: true
+    clean-disabled: false
 server:
   error:
     include-message: always
