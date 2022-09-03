@@ -7,8 +7,6 @@ target/
 ### Config files ###
 *-dev.yml
 *-test.yml
-flyway.conf
-persistence-units.xml
 
 
 ### STS ###
@@ -19,7 +17,7 @@ persistence-units.xml
 .settings
 .springBeans
 .sts4-cache
-
+.jpb
 ### IntelliJ IDEA ###
 .idea
 *.iws

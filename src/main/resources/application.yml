@@ -23,7 +23,10 @@ spring:
   redis:
     time-to-live: 600000
   flyway:
-    enabled: true
+    baseline-on-migrate: true
+    postgresql:
+      schemas: springboot_template
+    clean-disabled: true
 server:
   error:
     include-message: always
