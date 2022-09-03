@@ -22,6 +22,8 @@ spring:
 #    cache: false
   redis:
     time-to-live: 600000
+  flyway:
+    enabled: true
 server:
   error:
     include-message: always
@@ -34,3 +36,4 @@ app:
   spring-boot-template:
     unverified-account-remover:
       delay: 1
+

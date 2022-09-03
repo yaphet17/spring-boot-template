@@ -8,6 +8,7 @@ target/
 *-dev.yml
 *-test.yml
 flyway.conf
+persistence-units.xml
 
 
 ### STS ###

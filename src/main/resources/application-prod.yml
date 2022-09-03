@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/spring_react_template
+    url: jdbc:postgresql://localhost:5432/springboot_template
     username: yaphet
     password: root
   jpa:
