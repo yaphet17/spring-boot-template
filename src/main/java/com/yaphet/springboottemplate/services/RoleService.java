@@ -1,14 +1,9 @@
 package com.yaphet.springboottemplate.services;
 
-import com.yaphet.springboottemplate.exceptions.RoleAlreadyExistException;
-import com.yaphet.springboottemplate.exceptions.RoleNotFoundException;
-import com.yaphet.springboottemplate.models.Privilege;
-import com.yaphet.springboottemplate.models.Role;
-import com.yaphet.springboottemplate.repositories.RoleRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,13 +11,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import com.yaphet.springboottemplate.exceptions.RoleAlreadyExistException;
+import com.yaphet.springboottemplate.exceptions.RoleNotFoundException;
+import com.yaphet.springboottemplate.models.Privilege;
+import com.yaphet.springboottemplate.models.Role;
+import com.yaphet.springboottemplate.repositories.RoleRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class RoleService {
+
     private final RoleRepository roleRepository;
 
     public void createRole(Role role) {
@@ -66,16 +66,20 @@ public class RoleService {
     }
 
 //    @CacheEvict(cacheNames = "roles", allEntries = true)
-    public String deleteRole(Long id) {
+    public void deleteRole(Long id) {
         Role role = roleRepository
                 .findById(id)
                 .orElseThrow(() -> new RoleNotFoundException(id));
+
+        if(roleRepository.findByRole(id, 1) > 0){
+            throw new RuntimeException("Role is assigned to users");
+            // TODO handle this exception
+        }
 
         for(Privilege privilege : role.getPrivileges()){
             privilege.removeRole(role);
         }
         roleRepository.deleteById(id);
-        return role.getRoleName();
     }
 
 //    @CacheEvict(cacheNames = "roles", allEntries = true)
@@ -86,7 +90,6 @@ public class RoleService {
         Role updatedRole = roleRepository
                 .findById(newRole.getId())
                 .orElseThrow(() -> new RoleNotFoundException(id));
-        Role oldRole = updatedRole;
 
         if(newRole.getRoleName() != null &&
                 newRole.getRoleName().length() > 0 &&
@@ -103,10 +106,10 @@ public class RoleService {
 
         if(isUpdated){
             roleRepository.save(updatedRole);
-            Set<Privilege> privileges = oldRole.getPrivileges();
+            Set<Privilege> privileges = updatedRole.getPrivileges();
             if(!privileges.isEmpty()){
                 for(Privilege privilege : privileges){
-                    privilege.removeRole(oldRole);
+                    privilege.removeRole(updatedRole);
                 }
                 for(Privilege privilege : privileges){
                     privilege.addRole(updatedRole);

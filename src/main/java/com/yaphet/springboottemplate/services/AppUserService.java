@@ -1,6 +1,7 @@
 package com.yaphet.springboottemplate.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -62,6 +63,7 @@ public class AppUserService implements UserDetailsService {
         return appUserRepository.findAll(pageable);
     }
 
+
     public AppUser getAppUser(Long id) {
         return appUserRepository
                 .findById(id)
@@ -73,6 +75,7 @@ public class AppUserService implements UserDetailsService {
                 .findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
+
 
     //    @CacheEvict(cacheNames = "appUserList")
     public void saveAppUser(AppUser appUser) {

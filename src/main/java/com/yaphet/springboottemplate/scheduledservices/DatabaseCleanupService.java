@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import com.yaphet.springboottemplate.services.AppUserService;
 
 @Component
-public class UnVerifiedAccountRemoverService {
-    private static final Logger logger = LogManager.getLogger(UnVerifiedAccountRemoverService.class);
+public class DatabaseCleanupService {
+    private static final Logger logger = LogManager.getLogger(DatabaseCleanupService.class);
 
     private final AppUserService appUserService;
 
-    public UnVerifiedAccountRemoverService(AppUserService appUserService) {
+    public DatabaseCleanupService(AppUserService appUserService) {
         this.appUserService = appUserService;
     }
 

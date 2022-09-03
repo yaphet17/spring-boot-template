@@ -1,11 +1,13 @@
 package com.yaphet.springboottemplate.services;
 
-import com.yaphet.springboottemplate.models.AppUser;
-import com.yaphet.springboottemplate.models.Role;
-import lombok.RequiredArgsConstructor;
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import com.yaphet.springboottemplate.models.AppUser;
+import com.yaphet.springboottemplate.models.Role;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
