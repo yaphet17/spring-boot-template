@@ -23,12 +23,12 @@ public class PrivilegeService {
 
     private final PrivilegeRepository privilegeRepository;
 
-    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
+    @Cacheable(value = "privileges")
     public List<Privilege> getPrivileges() {
         return privilegeRepository.findAll();
     }
 
-    @Cacheable(cacheNames = "privileges", key = "#root.methodName")
+    @Cacheable(value = "privileges")
     public Page<Privilege> getPrivilegesByPage(int currentPage, int size, String sortBy) {
         Pageable pageable = PageRequest.of(currentPage,
                                             size,
@@ -47,7 +47,7 @@ public class PrivilegeService {
         privilegeRepository.save(privilege);
     }
 
-    @Cacheable(cacheNames = "privileges", key = "#privilegeName")
+    @Cacheable(value = "privileges", key = "#privilegeName")
     public Privilege getPrivilege(String privilegeName) {
         return privilegeRepository
                 .findByPrivilegeName(privilegeName)

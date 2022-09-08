@@ -37,9 +37,11 @@ public class SpringbootTemplateApplication {
  * - Change existing email template
  * - Send email to users registered by admins
  * - Send welcome email to new users after email verification
- * - Implement Flyway migration
- * - Implement a feature to assign default role for a user when a role is deleted
+ * - Implement Flyway migration (Done)
+ * - Implement a feature to assign default role for a user when a role is deleted (Done-prevent deletion)
  * - Implement caching in a proper way
  * - Consider implementing createdBy and modifiedBy fields for each entity
- * - Fix issue with the remember me functionality
+ * - Fix issue with remember me functionality
+ * - Implement error handler in a proper way
+ * - Handle admin that to delete super admin or it self
  */

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
+    @CacheEvict(cacheNames = "roles", allEntries = true)
     public void createRole(Role role) {
         String roleName = role.getRoleName().toUpperCase();
         if(!roleName.startsWith("ROLE_")){
@@ -39,12 +42,12 @@ public class RoleService {
         roleRepository.save(role);
     }
 
-//    @Cacheable(cacheNames = "roles", key = "#root.methodName")
+    @Cacheable(value = "roles")
     public List<Role> getRoles() {
         return roleRepository.findAll();
     }
 
-//    @Cacheable(cacheNames = "roles", key = "#root.methodName")
+    @Cacheable(value = "roles")
     public Page<Role> getRolesByPage(int currentPage, int size, String sortBy) {
         Pageable pageable = PageRequest.of(currentPage,
                                             size,
@@ -53,19 +56,21 @@ public class RoleService {
         return roleRepository.findAll(pageable);
     }
 
+    @Cacheable(value = "roles", key = "#roleName")
     public Role getRole(String roleName) {
         return roleRepository
                 .findByRoleName(roleName)
                 .orElseThrow(() -> new RoleNotFoundException(roleName));
     }
 
+    @Cacheable(value = "roles", key = "#id")
     public Role getRole(Long id){
         return roleRepository
                 .findById(id)
                 .orElseThrow(() -> new RoleNotFoundException(id));
     }
 
-//    @CacheEvict(cacheNames = "roles", allEntries = true)
+    @CacheEvict(cacheNames = "roles", allEntries = true)
     public void deleteRole(Long id) {
         Role role = roleRepository
                 .findById(id)
@@ -82,7 +87,7 @@ public class RoleService {
         roleRepository.deleteById(id);
     }
 
-//    @CacheEvict(cacheNames = "roles", allEntries = true)
+    @CacheEvict(cacheNames = "roles", allEntries = true)
     @Transactional
     public boolean updateRole(Role newRole) {
         boolean isUpdated = false;

@@ -7,6 +7,7 @@ import com.yaphet.springboottemplate.security.ChangePassword;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class ProfileController {
     private final AppUserService appUserService;
     private final ProfileService profileService;
 
+    @Cacheable(value = "appUserProfile", key = "")
     @GetMapping
     public String getAppUser(Model model){
         AppUser appUser = appUserService.getAppUser(getLoggedInUser());

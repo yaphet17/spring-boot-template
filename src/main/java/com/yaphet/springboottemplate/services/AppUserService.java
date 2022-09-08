@@ -9,6 +9,8 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -53,8 +55,7 @@ public class AppUserService implements UserDetailsService {
         this.roleService = roleService;
     }
 
-
-//    @Cacheable(cacheNames = "appUserList", key = "#root.methodName")
+    @Cacheable(value = "appUsers")
     public Page<AppUser> getAppUsers(int currentPage, int size, String sortBy) {
         PageRequest pageable = PageRequest.of(currentPage,
                 size,
@@ -64,20 +65,21 @@ public class AppUserService implements UserDetailsService {
     }
 
 
+    @Cacheable(value = "appUsers", key = "#id")
     public AppUser getAppUser(Long id) {
         return appUserRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
     }
 
+    @Cacheable(value = "appUsers", key = "#email")
     public AppUser getAppUser(String email) {
         return appUserRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(email));
     }
 
-
-    //    @CacheEvict(cacheNames = "appUserList")
+    @CacheEvict(value = "appUsers", allEntries = true)
     public void saveAppUser(AppUser appUser) {
         String email = appUser.getEmail();
         boolean emailExists = appUserRepository.findByEmail(email).isPresent();
@@ -102,7 +104,7 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.save(appUser);
     }
 
-    //    @CacheEvict(cacheNames = "appUserList")
+    @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
     public boolean updateAppUser(AppUser au) {
         boolean isUpdated = false;
@@ -142,7 +144,7 @@ public class AppUserService implements UserDetailsService {
         return isUpdated;
     }
 
-    //    @CacheEvict(cacheNames = "appUserList")
+    @CacheEvict(value = "appUsers", allEntries = true)
     public void deleteAppUser(Long id) {
         AppUser appUser = appUserRepository
                 .findById(id)
@@ -154,17 +156,20 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.deleteById(id);
     }
 
+    @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
     public int removeUnVerifiedUsers() {
         // remove users that have not been verified after 3 days
         return appUserRepository.deleteAllUnverifiedUsers(LocalDateTime.now().minusDays(3));
     }
 
+    @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
     public void updateAuthenticationType(String username, String authType) {
         appUserRepository.updateAuthType(username, AuthenticationType.valueOf(authType.toUpperCase()));
     }
 
+    @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
     public void updateAppUserRole(AppUser appUser) {
         String email = appUser.getEmail();
@@ -189,6 +194,7 @@ public class AppUserService implements UserDetailsService {
         return token;
     }
 
+    @CacheEvict(value = "appUsers", allEntries = true)
     public void enableAppUser(String email) {
         appUserRepository
                 .findByEmail(email)
