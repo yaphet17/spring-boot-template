@@ -1,5 +1,7 @@
 package com.yaphet.springboottemplate.config.security;
 
+import javax.sql.DataSource;
+
 import com.yaphet.springboottemplate.services.AppUserService;
 import com.yaphet.springboottemplate.services.CustomOAuth2UserService;
 import com.yaphet.springboottemplate.security.LocalLoginSuccessHandler;
@@ -14,6 +16,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 
 @Configuration
@@ -25,17 +30,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final LocalLoginSuccessHandler localSuccessHandler;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final DataSource dataSource;
 
     public WebSecurityConfig(AppUserService appUserService,
                              CustomOAuth2UserService customOAuth2UserService,
                              BCryptPasswordEncoder bCryptPasswordEncoder,
                              LocalLoginSuccessHandler localSuccessHandler,
-                             OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+                             OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+                             DataSource dataSource) {
         this.appUserService = appUserService;
         this.customOAuth2UserService = customOAuth2UserService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.localSuccessHandler = localSuccessHandler;
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -49,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                     .successHandler(localSuccessHandler)
                 .and()
-                .rememberMe().userDetailsService(appUserService)
+                .rememberMe().userDetailsService(appUserService).tokenRepository(persistentRememberMeToken())
                 .and()
                 .oauth2Login()
                     .loginPage("/login")
@@ -75,5 +83,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(appUserService);
         return provider;
+    }
+    @Bean
+    public PersistentTokenRepository persistentRememberMeToken(){
+        JdbcTokenRepositoryImpl rememberMeToken = new JdbcTokenRepositoryImpl();
+        rememberMeToken.setDataSource(dataSource);
+        return rememberMeToken;
+
     }
 }
