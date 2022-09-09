@@ -20,13 +20,13 @@ public class DatabaseCleanupService {
     private final AppUserService appUserService;
     private final PersistentLoginService persistentLoginService;
 
-    @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-unverified-accounts}", timeUnit = TimeUnit.DAYS)
+    @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-unverified-accounts}", initialDelay = 1, timeUnit = TimeUnit.DAYS)
     public void removeUnverifiedAccounts() {
         int count = appUserService.removeUnVerifiedUsers();
         logger.info(count + " unverified accounts removed");
     }
 
-    @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-expired-remember-me-tokens}", timeUnit = TimeUnit.DAYS)
+    @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-expired-remember-me-tokens}", initialDelay = 1, timeUnit = TimeUnit.DAYS)
     public void removeExpiredTokens() {
         int count  = persistentLoginService.removeAllExpiredTokens();
         logger.info(count + " expired tokens removed");
