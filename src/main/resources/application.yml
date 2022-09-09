@@ -3,6 +3,7 @@ spring:
   config:
     activate:
       on-profile: @activatedProperties@
+
   mail:
     host: localhost
     port: 1025
@@ -39,8 +40,12 @@ server:
       cookie.http-only: true
 app:
   spring-boot-template:
-    unverified-account-remover:
-      delay: 1
+    remember-me:
+      token-validity-seconds: 1209600
+    scheduled-services:
+      delay:
+        remove-unverified-accounts: 1
+        remove-expired-remember-me-tokens: 1
     mail:
       from: "root@rootmail.com"
 

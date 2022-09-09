@@ -7,6 +7,7 @@ import com.yaphet.springboottemplate.services.CustomOAuth2UserService;
 import com.yaphet.springboottemplate.security.LocalLoginSuccessHandler;
 import com.yaphet.springboottemplate.security.OAuth2LoginSuccessHandler;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,19 +32,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final LocalLoginSuccessHandler localSuccessHandler;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final DataSource dataSource;
+    private final int tokenValiditySeconds;
 
     public WebSecurityConfig(AppUserService appUserService,
                              CustomOAuth2UserService customOAuth2UserService,
                              BCryptPasswordEncoder bCryptPasswordEncoder,
                              LocalLoginSuccessHandler localSuccessHandler,
                              OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
-                             DataSource dataSource) {
+                             DataSource dataSource,
+                             @Value("${app.spring-boot-template.remember-me.token-validity-seconds}") int tokenValiditySeconds) {
         this.appUserService = appUserService;
         this.customOAuth2UserService = customOAuth2UserService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.localSuccessHandler = localSuccessHandler;
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.dataSource = dataSource;
+        this.tokenValiditySeconds = tokenValiditySeconds;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                     .successHandler(localSuccessHandler)
                 .and()
-                .rememberMe().userDetailsService(appUserService).tokenRepository(persistentRememberMeToken())
+                .rememberMe().userDetailsService(appUserService).tokenRepository(persistentRememberMeToken()).tokenValiditySeconds(tokenValiditySeconds)
                 .and()
                 .oauth2Login()
                     .loginPage("/login")
@@ -77,6 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder auth){
         auth.authenticationProvider(daoAuthenticationProvider());
     }
+
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -84,11 +89,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(appUserService);
         return provider;
     }
+
     @Bean
     public PersistentTokenRepository persistentRememberMeToken(){
         JdbcTokenRepositoryImpl rememberMeToken = new JdbcTokenRepositoryImpl();
         rememberMeToken.setDataSource(dataSource);
         return rememberMeToken;
-
     }
 }

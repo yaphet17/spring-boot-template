@@ -45,4 +45,5 @@ public class SpringbootTemplateApplication {
  * - Implement error handler in a proper way
  * - Handle admin that to delete super admin or it self
  * - Create a scheduled service to cleanup expired remember-me tokens
+ * - Consider creating an aspect to delete remember-me tokens when a user is deleted
  */

@@ -8,21 +8,28 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.yaphet.springboottemplate.services.AppUserService;
+import com.yaphet.springboottemplate.services.PersistentLoginService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Component
 public class DatabaseCleanupService {
     private static final Logger logger = LogManager.getLogger(DatabaseCleanupService.class);
 
     private final AppUserService appUserService;
+    private final PersistentLoginService persistentLoginService;
 
-    public DatabaseCleanupService(AppUserService appUserService) {
-        this.appUserService = appUserService;
+    @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-unverified-accounts}", timeUnit = TimeUnit.DAYS)
+    public void removeUnverifiedAccounts() {
+        int count = appUserService.removeUnVerifiedUsers();
+        logger.info(count + " unverified accounts removed");
     }
 
-    @Scheduled(fixedDelayString = "${app.spring-boot-template.unverified-account-remover.delay}", timeUnit = TimeUnit.DAYS)
-    public void removeUnverifiedAccounts() {
-        appUserService.removeUnVerifiedUsers();
-        logger.info("Unverified accounts removed");
+    @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-expired-remember-me-tokens}", timeUnit = TimeUnit.DAYS)
+    public void removeExpiredTokens() {
+        int count  = persistentLoginService.removeAllExpiredTokens();
+        logger.info(count + " expired tokens removed");
     }
 
 
