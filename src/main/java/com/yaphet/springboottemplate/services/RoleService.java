@@ -13,8 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yaphet.springboottemplate.exceptions.RoleAlreadyExistException;
-import com.yaphet.springboottemplate.exceptions.RoleNotFoundException;
+import com.yaphet.springboottemplate.exceptions.ResourceAlreadyExistsException;
+import com.yaphet.springboottemplate.exceptions.ResourceNotFoundException;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.RoleRepository;
@@ -26,6 +26,10 @@ import lombok.RequiredArgsConstructor;
 public class RoleService {
 
     private final RoleRepository roleRepository;
+    private final String ROLE_NOT_FOUND_WITH_ID_MSG = "Role not found with id %d";
+    private final String ROLE_NOT_FOUND_WITH_NAME_MSG = "Role %s not found";
+
+    private final String ROLE_ALREADY_EXISTS = "Role %s already exists";
 
     @CacheEvict(cacheNames = "roles", allEntries = true)
     public void createRole(Role role) {
@@ -37,7 +41,7 @@ public class RoleService {
         boolean roleExists = roleRepository.findByRoleName(roleName).isPresent();
 
         if(roleExists){
-            throw new RoleAlreadyExistException(roleName);
+            throw new ResourceAlreadyExistsException(String.format(ROLE_ALREADY_EXISTS, roleName));
         }
         roleRepository.save(role);
     }
@@ -60,21 +64,21 @@ public class RoleService {
     public Role getRole(String roleName) {
         return roleRepository
                 .findByRoleName(roleName)
-                .orElseThrow(() -> new RoleNotFoundException(roleName));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_NAME_MSG, roleName)));
     }
 
     @Cacheable(value = "roles", key = "#id")
     public Role getRole(Long id){
         return roleRepository
                 .findById(id)
-                .orElseThrow(() -> new RoleNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_ID_MSG, id)));
     }
 
     @CacheEvict(cacheNames = "roles", allEntries = true)
     public void deleteRole(Long id) {
         Role role = roleRepository
                 .findById(id)
-                .orElseThrow(() -> new RoleNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_ID_MSG, id)));
 
         if(roleRepository.findByRole(id, 1) > 0){
             throw new RuntimeException("Role is assigned to users");
@@ -94,7 +98,7 @@ public class RoleService {
         Long id = newRole.getId();
         Role updatedRole = roleRepository
                 .findById(newRole.getId())
-                .orElseThrow(() -> new RoleNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_ID_MSG, id)));
 
         if(newRole.getRoleName() != null &&
                 newRole.getRoleName().length() > 0 &&

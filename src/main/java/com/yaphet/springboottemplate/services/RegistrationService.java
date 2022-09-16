@@ -1,19 +1,22 @@
 package com.yaphet.springboottemplate.services;
 
-import com.yaphet.springboottemplate.exceptions.EmailAlreadyConfirmedException;
-import com.yaphet.springboottemplate.exceptions.InvalidEmailException;
-import com.yaphet.springboottemplate.exceptions.TokenExpiredException;
-import com.yaphet.springboottemplate.exceptions.TokenNotFoundException;
-import com.yaphet.springboottemplate.models.AppUser;
-import com.yaphet.springboottemplate.models.ConfirmationToken;
-import com.yaphet.springboottemplate.utilities.email.EmailValidator;
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.Properties;
+
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.Properties;
+import com.yaphet.springboottemplate.exceptions.EmailAlreadyConfirmedException;
+import com.yaphet.springboottemplate.exceptions.InvalidEmailException;
+import com.yaphet.springboottemplate.exceptions.ResourceNotFoundException;
+import com.yaphet.springboottemplate.exceptions.TokenExpiredException;
+import com.yaphet.springboottemplate.models.AppUser;
+import com.yaphet.springboottemplate.models.ConfirmationToken;
+import com.yaphet.springboottemplate.utilities.email.EmailValidator;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
@@ -24,6 +27,7 @@ public class RegistrationService {
     private final AppUserRoleService appUserRoleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;
+    private final String TOKEN_NOT_FOUND = "Token not found";
     private final String BASE_URL = new Properties().getProperty(
             "app-spring-boot-template.base-url",
             "http://localhost:8080");
@@ -51,7 +55,7 @@ public class RegistrationService {
     public void confirmToken(@RequestParam("token") String token){
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(TokenNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException(TOKEN_NOT_FOUND));
 
         if(confirmationToken.getConfirmedAt() != null){
             throw new EmailAlreadyConfirmedException();

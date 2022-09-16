@@ -32,18 +32,21 @@ public class SpringbootTemplateApplication {
 
 /**
  * TODO
+ * --- DONE ---
  * - Implement soft delete for all entities (Done)
  * - Update modified at field for each update query (Done)
+ * - Create a scheduled service to cleanup expired remember-me tokens (Done)
+ * - Implement Flyway migration (Done)
+ * - Consider implementing createdBy and modifiedBy fields for each entity (Done)
+ * - Implement caching in a proper way (Done)
+ * - Fix issue with remember me functionality (Done)
+ * - Implement a feature to assign default role for a user when a role is deleted (Done-prevent deletion)
+ * ---In progress ---
  * - Change existing email template
  * - Send email to users registered by admins
  * - Send welcome email to new users after email verification
- * - Implement Flyway migration (Done)
- * - Implement a feature to assign default role for a user when a role is deleted (Done-prevent deletion)
- * - Implement caching in a proper way (Done)
- * - Consider implementing createdBy and modifiedBy fields for each entity (Done)
- * - Fix issue with remember me functionality
  * - Implement error handler in a proper way
  * - Handle admin that to delete super admin or it self
- * - Create a scheduled service to cleanup expired remember-me tokens
  * - Consider creating an aspect to delete remember-me tokens when a user is deleted
+ * - Adhere to UpperCase for final property names
  */

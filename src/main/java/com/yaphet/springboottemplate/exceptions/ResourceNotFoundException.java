@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class PrivilegeNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException{
 
-    public PrivilegeNotFoundException(String privilegeName){
-        super("Privilege" + privilegeName + " not found");
+    public ResourceNotFoundException(String message){
+        super(message);
     }
 }

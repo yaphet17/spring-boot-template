@@ -1,7 +1,6 @@
 package com.yaphet.springboottemplate.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -22,15 +21,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yaphet.springboottemplate.exceptions.EmailAlreadyExistsException;
-import com.yaphet.springboottemplate.exceptions.EmailNotFoundException;
-import com.yaphet.springboottemplate.exceptions.IdNotFoundException;
+import com.yaphet.springboottemplate.exceptions.ResourceAlreadyExistsException;
+import com.yaphet.springboottemplate.exceptions.ResourceNotFoundException;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.ConfirmationToken;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.repositories.AppUserRepository;
-import com.yaphet.springboottemplate.security.AuthenticationType;
 import com.yaphet.springboottemplate.security.AppUserDetails;
+import com.yaphet.springboottemplate.security.AuthenticationType;
 
 @Service
 public class AppUserService implements UserDetailsService {
@@ -42,7 +40,10 @@ public class AppUserService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
     private final RoleService roleService;
     private final String USER_NOT_FOUND_MSG = "user with %s not found";
-    private final String RESOURCE_NAME = "App user";
+
+    private final String EMAIL_NOT_FOUND_MSG = "User not found with email %s" ;
+    private final String ID_NOT_FOUND_MSG = "App user not found with id %d";
+    private final String EMAIL_ALREADY_EXISTS_MSG = "Email %s already taken";
     private final int TOKEN_EXPIRATION_DELAY = 15;
 
     @Autowired
@@ -69,14 +70,14 @@ public class AppUserService implements UserDetailsService {
     public AppUser getAppUser(Long id) {
         return appUserRepository
                 .findById(id)
-                .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id)));
     }
 
     @Cacheable(value = "appUsers", key = "#email")
     public AppUser getAppUser(String email) {
         return appUserRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(EMAIL_NOT_FOUND_MSG, email)));
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)
@@ -85,7 +86,7 @@ public class AppUserService implements UserDetailsService {
         boolean emailExists = appUserRepository.findByEmail(email).isPresent();
 
         if (emailExists) {
-            throw new EmailAlreadyExistsException(email);
+            throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, email));
         }
 
         if (appUser.getRoles() == null) {
@@ -120,7 +121,7 @@ public class AppUserService implements UserDetailsService {
                 newEmail.length() > 0 &&
                 !Objects.equals(newEmail, appUser.getEmail())) {
             if (appUserRepository.findByEmail(newEmail).isPresent()) {
-                throw new EmailAlreadyExistsException(newEmail);
+                throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, newEmail));
             }
             appUser.setEmail(newEmail);
             isUpdated = true;
@@ -148,7 +149,7 @@ public class AppUserService implements UserDetailsService {
     public void deleteAppUser(Long id) {
         AppUser appUser = appUserRepository
                 .findById(id)
-                .orElseThrow(() -> new IdNotFoundException(RESOURCE_NAME, id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id)));
         Set<Role> appUserRoles = appUser.getRoles();
         for (Role role : appUserRoles) {
             role.removeAppUser(appUser);
@@ -178,7 +179,7 @@ public class AppUserService implements UserDetailsService {
                 .findByEmail(email)
 //                .filter(user -> Objects.equals(appUser.getRoles(), user.getRoles()))
                 .map(appUserRepository::save)
-                .orElseThrow(() -> new EmailNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(EMAIL_NOT_FOUND_MSG, email)));
     }
 
     public String signUpUser(AppUser appUser) {
@@ -198,7 +199,7 @@ public class AppUserService implements UserDetailsService {
     public void enableAppUser(String email) {
         appUserRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(EMAIL_NOT_FOUND_MSG, email)));
         appUserRepository.enableAppUser(email);
     }
 
