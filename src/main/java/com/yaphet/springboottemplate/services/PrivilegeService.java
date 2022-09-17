@@ -34,9 +34,9 @@ public class PrivilegeService {
     @Cacheable(value = "privileges")
     public Page<Privilege> getPrivilegesByPage(int currentPage, int size, String sortBy) {
         Pageable pageable = PageRequest.of(currentPage,
-                                            size,
-                                            sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
-                                           );
+                size,
+                sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
+        );
         return privilegeRepository.findAll(pageable);
     }
 

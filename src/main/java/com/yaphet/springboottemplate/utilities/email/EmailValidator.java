@@ -12,9 +12,9 @@ public class EmailValidator implements Predicate<String> {
 
     @Override
     public boolean test(String s) {
-        Pattern emailPattern=Pattern.compile("^(?=.{1,64}@)[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)*@" +
+        Pattern emailPattern = Pattern.compile("^(?=.{1,64}@)[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)*@" +
                 "[^-][a-zA-Z0-9-]+(\\.[a-zA-Z]+)*(\\.[a-zA_Z]{2,})$");
-        Matcher emailMatcher=emailPattern.matcher(s);
+        Matcher emailMatcher = emailPattern.matcher(s);
         return emailMatcher.matches();
     }
 }

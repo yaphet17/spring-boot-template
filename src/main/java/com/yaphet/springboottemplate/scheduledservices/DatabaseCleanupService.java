@@ -28,7 +28,7 @@ public class DatabaseCleanupService {
 
     @Scheduled(fixedDelayString = "${app.spring-boot-template.scheduled-services.delay.remove-expired-remember-me-tokens}", initialDelay = 1, timeUnit = TimeUnit.DAYS)
     public void removeExpiredTokens() {
-        int count  = persistentLoginService.removeAllExpiredTokens();
+        int count = persistentLoginService.removeAllExpiredTokens();
         logger.info(count + " expired tokens removed");
     }
 

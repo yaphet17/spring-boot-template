@@ -35,18 +35,16 @@ import com.yaphet.springboottemplate.security.AuthenticationType;
 @Service
 public class AppUserService implements UserDetailsService {
 
-    private Logger logger = LogManager.getLogger(AppUserService.class);
-
     private final BCryptPasswordEncoder passwordEncoder;
     private final AppUserRepository appUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final RoleService roleService;
     private final String USER_NOT_FOUND_MSG = "user with %s not found";
-
-    private final String EMAIL_NOT_FOUND_MSG = "User not found with email %s" ;
+    private final String EMAIL_NOT_FOUND_MSG = "User not found with email %s";
     private final String ID_NOT_FOUND_MSG = "App user not found with id %d";
     private final String EMAIL_ALREADY_EXISTS_MSG = "Email %s already taken";
     private final int TOKEN_EXPIRATION_DELAY = 15;
+    private final Logger logger = LogManager.getLogger(AppUserService.class);
 
     @Autowired
     public AppUserService(BCryptPasswordEncoder passwordEncoder,
@@ -100,7 +98,7 @@ public class AppUserService implements UserDetailsService {
             appUser.setPassword(encodedPassword);
         }
 
-        if(appUser.getAuthType() == null){
+        if (appUser.getAuthType() == null) {
             appUser.setAuthType(AuthenticationType.LOCAL);
         }
 

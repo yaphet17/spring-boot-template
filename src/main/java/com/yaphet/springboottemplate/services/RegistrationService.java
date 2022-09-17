@@ -36,32 +36,32 @@ public class RegistrationService {
         String email = appUser.getEmail();
         boolean isEmailValid = emailValidator.test(email);
 
-        if(!isEmailValid){
+        if (!isEmailValid) {
             throw new InvalidEmailException(email);
         }
         appUser.setUserName(email);
         String token = appUserService.signupUser(appUser);
         //assign default role to new user
-        appUserRoleService.assignRole(appUser.getEmail(),"ROLE_USER");
+        appUserRoleService.assignRole(appUser.getEmail(), "ROLE_USER");
         String link = BASE_URL + "/confirm?token=" + token;
         emailSender.send(
                 appUser.getEmail(),
                 "Confirm your email",
-                buildEmail(appUser.getFirstName() + " "+appUser.getLastName(), link)
+                buildEmail(appUser.getFirstName() + " " + appUser.getLastName(), link)
         );
     }
 
     @Transactional
-    public void confirmToken(@RequestParam("token") String token){
+    public void confirmToken(@RequestParam("token") String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() -> new ResourceNotFoundException(TOKEN_NOT_FOUND));
 
-        if(confirmationToken.getConfirmedAt() != null){
+        if (confirmationToken.getConfirmedAt() != null) {
             throw new EmailAlreadyConfirmedException();
         }
         LocalDateTime expiresAt = confirmationToken.getExpiresAt();
-        if(expiresAt.isBefore(LocalDateTime.now())){
+        if (expiresAt.isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException(expiresAt);
         }
         confirmationTokenService.setConfirmedAt(token);

@@ -2,7 +2,9 @@ package com.yaphet.springboottemplate.controllers;
 
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.services.RegistrationService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -22,26 +24,29 @@ public class RegistrationController {
     private final RegistrationService appUserRegistrationService;
 
     @GetMapping
-    public String index(){
+    public String index() {
         return "index";
     }
+
     @GetMapping("/register")
-    public String registrationForm(Model model){
+    public String registrationForm(Model model) {
         AppUser appUser = new AppUser();
         model.addAttribute("appUser", appUser);
         return "registration/register-user";
     }
+
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result){
-        if(result.hasErrors()){
+    public String register(@Valid @ModelAttribute("appUser") AppUser appUser, BindingResult result) {
+        if (result.hasErrors()) {
             log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "registration/register-user";
         }
         appUserRegistrationService.register(appUser);
         return "redirect:/login";
     }
+
     @GetMapping("/confirm")
-    public String confirm(@RequestParam("token") String token){
+    public String confirm(@RequestParam("token") String token) {
         appUserRegistrationService.confirmToken(token);
         return "registration/email-verified";
     }

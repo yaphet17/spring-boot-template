@@ -21,15 +21,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-       OAuth2User oAuth2User = super.loadUser(userRequest);
-       String oauth2ClientName = userRequest.getClientRegistration().getClientName();
-       String email = oAuth2User.getAttribute("email");
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+        String oauth2ClientName = userRequest.getClientRegistration().getClientName();
+        String email = oAuth2User.getAttribute("email");
 
-        if(!appUserService.isUserExists(oAuth2User.getAttribute(email))) {
-           AppUser appUser = createUserIfDoesNotExist(oAuth2User, oauth2ClientName);
-           return new CustomOAuth2User(appUser, oauth2ClientName, oAuth2User);
-       }
-       return new CustomOAuth2User(appUserService.getAppUser(email), oauth2ClientName, oAuth2User);
+        if (!appUserService.isUserExists(oAuth2User.getAttribute(email))) {
+            AppUser appUser = createUserIfDoesNotExist(oAuth2User, oauth2ClientName);
+            return new CustomOAuth2User(appUser, oauth2ClientName, oAuth2User);
+        }
+        return new CustomOAuth2User(appUserService.getAppUser(email), oauth2ClientName, oAuth2User);
     }
 
 
@@ -37,10 +37,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         AppUser appUser = new AppUser();
         String name = oAuth2User.getAttribute("name");
 
-        if(name != null) {
+        if (name != null) {
             String[] nameParts = name.split(" ");
             appUser.setFirstName(nameParts[0]);
-            if(nameParts.length > 1) {
+            if (nameParts.length > 1) {
                 appUser.setLastName(nameParts[1]);
             }
         }

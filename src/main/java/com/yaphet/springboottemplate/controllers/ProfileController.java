@@ -4,7 +4,9 @@ import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.services.AppUserService;
 import com.yaphet.springboottemplate.services.ProfileService;
 import com.yaphet.springboottemplate.security.ChangePassword;
+
 import lombok.RequiredArgsConstructor;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,21 +32,22 @@ public class ProfileController {
 
     @Cacheable(value = "appUserProfile", key = "")
     @GetMapping
-    public String getAppUser(Model model){
+    public String getAppUser(Model model) {
         AppUser appUser = appUserService.getAppUser(getLoggedInUser());
         model.addAttribute("appUser", appUser);
         return "/profile/profile-detail";
     }
 
     @GetMapping("/edit")
-    public String updateForm(Model model){
+    public String updateForm(Model model) {
         AppUser appUser = appUserService.getAppUser(getLoggedInUser());
         model.addAttribute("appUser", appUser);
         return "/profile/profile-edit";
     }
+
     @PostMapping("/edit")
-    public String update(@Valid @ModelAttribute AppUser appUser, BindingResult result){
-        if(result.hasErrors()){
+    public String update(@Valid @ModelAttribute AppUser appUser, BindingResult result) {
+        if (result.hasErrors()) {
             log.error(result.getAllErrors());
             return "redirect:/profile/edit";
         }
@@ -53,17 +56,18 @@ public class ProfileController {
     }
 
     @GetMapping("/change-password")
-    public String changePasswordForm(Model model){
+    public String changePasswordForm(Model model) {
         ChangePassword changePassword = new ChangePassword();
 
         changePassword.setUsername(getLoggedInUser());
         model.addAttribute("changePassword", changePassword);
         return "/profile/change-password";
     }
+
     @PostMapping("/change-password")
     @PreAuthorize("#changePassword.username == principal.username")
-    public String changePassword(@ModelAttribute ChangePassword changePassword, BindingResult result){
-        if(result.hasErrors()){
+    public String changePassword(@ModelAttribute ChangePassword changePassword, BindingResult result) {
+        if (result.hasErrors()) {
             log.error(result.getAllErrors());
             return "redirect: /profile/change-password";
         }
@@ -73,7 +77,7 @@ public class ProfileController {
         return "redirect:/profile";
     }
 
-    private String getLoggedInUser(){
+    private String getLoggedInUser() {
         return SecurityContextHolder
                 .getContext()
                 .getAuthentication()

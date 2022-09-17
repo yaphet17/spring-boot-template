@@ -7,6 +7,7 @@ import com.yaphet.springboottemplate.services.*;
 import com.yaphet.springboottemplate.security.AuthenticationType;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -26,16 +27,15 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
     private final PrivilegeService privilegeService;
 
 
-
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if(alreadySetup){
+        if (alreadySetup) {
             return;
         }
 
-        if(!privilegeService.getPrivileges().isEmpty()){
+        if (!privilegeService.getPrivileges().isEmpty()) {
             alreadySetup = true;
             return;
         }
@@ -53,7 +53,7 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
         privileges.add(new Privilege("APPUSER-EDIT"));
         privileges.add(new Privilege("APPUSER-DELETE"));
         privileges.add(new Privilege("APPUSER-ASSIGN_ROLE"));
-        for(Privilege privilege : privileges){
+        for (Privilege privilege : privileges) {
             privilegeService.createPrivilege(privilege);
         }
 
@@ -66,7 +66,7 @@ public class DatabaseSeeder implements ApplicationListener<ContextRefreshedEvent
                 .collect(Collectors.toSet())
         ));
         roles.add(new Role("ROLE_USER", "Limited Access", Set.of()));
-        for(Role role : roles){
+        for (Role role : roles) {
             roleService.createRole(role);
         }
 

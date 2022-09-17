@@ -34,13 +34,13 @@ public class RoleService {
     @CacheEvict(cacheNames = "roles", allEntries = true)
     public void createRole(Role role) {
         String roleName = role.getRoleName().toUpperCase();
-        if(!roleName.startsWith("ROLE_")){
-            roleName =  "ROLE_" + roleName;
+        if (!roleName.startsWith("ROLE_")) {
+            roleName = "ROLE_" + roleName;
         }
         role.setRoleName(roleName);
         boolean roleExists = roleRepository.findByRoleName(roleName).isPresent();
 
-        if(roleExists){
+        if (roleExists) {
             throw new ResourceAlreadyExistsException(String.format(ROLE_ALREADY_EXISTS, roleName));
         }
         roleRepository.save(role);
@@ -54,9 +54,9 @@ public class RoleService {
     @Cacheable(value = "roles")
     public Page<Role> getRolesByPage(int currentPage, int size, String sortBy) {
         Pageable pageable = PageRequest.of(currentPage,
-                                            size,
-                                            sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
-                                           );
+                size,
+                sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
+        );
         return roleRepository.findAll(pageable);
     }
 
@@ -68,7 +68,7 @@ public class RoleService {
     }
 
     @Cacheable(value = "roles", key = "#id")
-    public Role getRole(Long id){
+    public Role getRole(Long id) {
         return roleRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_ID_MSG, id)));
@@ -80,12 +80,12 @@ public class RoleService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_ID_MSG, id)));
 
-        if(roleRepository.findByRole(id, 1) > 0){
+        if (roleRepository.findByRole(id, 1) > 0) {
             throw new RuntimeException("Role is assigned to users");
             // TODO handle this exception
         }
 
-        for(Privilege privilege : role.getPrivileges()){
+        for (Privilege privilege : role.getPrivileges()) {
             privilege.removeRole(role);
         }
         roleRepository.deleteById(id);
@@ -100,27 +100,27 @@ public class RoleService {
                 .findById(newRole.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ROLE_NOT_FOUND_WITH_ID_MSG, id)));
 
-        if(newRole.getRoleName() != null &&
+        if (newRole.getRoleName() != null &&
                 newRole.getRoleName().length() > 0 &&
-                !Objects.equals(updatedRole.getRoleName(), newRole.getRoleName())){
+                !Objects.equals(updatedRole.getRoleName(), newRole.getRoleName())) {
             updatedRole.setRoleName(newRole.getRoleName());
             isUpdated = true;
         }
-        if(newRole.getRoleDescription() != null &&
+        if (newRole.getRoleDescription() != null &&
                 newRole.getRoleDescription().length() > 0 &&
-                !Objects.equals(newRole.getRoleDescription(), updatedRole.getRoleDescription())){
+                !Objects.equals(newRole.getRoleDescription(), updatedRole.getRoleDescription())) {
             updatedRole.setRoleDescription(newRole.getRoleDescription());
             isUpdated = true;
         }
 
-        if(isUpdated){
+        if (isUpdated) {
             roleRepository.save(updatedRole);
             Set<Privilege> privileges = updatedRole.getPrivileges();
-            if(!privileges.isEmpty()){
-                for(Privilege privilege : privileges){
+            if (!privileges.isEmpty()) {
+                for (Privilege privilege : privileges) {
                     privilege.removeRole(updatedRole);
                 }
-                for(Privilege privilege : privileges){
+                for (Privilege privilege : privileges) {
                     privilege.addRole(updatedRole);
                 }
             }

@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.GONE)
-public class EmailAlreadyConfirmedException extends RuntimeException{
+public class EmailAlreadyConfirmedException extends RuntimeException {
 
-    public EmailAlreadyConfirmedException(){
+    public EmailAlreadyConfirmedException() {
         super("Your email is already confirmed");
     }
 }

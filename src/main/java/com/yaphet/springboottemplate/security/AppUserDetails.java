@@ -3,8 +3,10 @@ package com.yaphet.springboottemplate.security;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,24 +27,24 @@ public class AppUserDetails implements UserDetails {
         Set<Role> roles = appUser.getRoles();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        for(Role role : roles){
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-            for(Privilege privilege : role.getPrivileges()){
+            for (Privilege privilege : role.getPrivileges()) {
                 authorities.add(new SimpleGrantedAuthority(privilege.getPrivilegeName()));
             }
         }
         return authorities;
     }
 
-    public AppUser getAppUser(){
+    public AppUser getAppUser() {
         return appUser;
     }
 
-    public Long getId(){
+    public Long getId() {
         return appUser.getId();
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return String.format("%s %s",
                 appUser.getFirstName(),
                 appUser.getLastName());
@@ -72,6 +74,7 @@ public class AppUserDetails implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return appUser.getEnabled();

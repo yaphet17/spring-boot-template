@@ -2,7 +2,9 @@ package com.yaphet.springboottemplate.services;
 
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,15 +25,15 @@ public class RolePrivilegeService {
         rolePrivileges.addAll(privileges);
         role.setPrivileges(rolePrivileges);
         updateRolePrivilege(role);
-        for(Privilege privilege : privileges){
+        for (Privilege privilege : privileges) {
             privilege.addRole(role);
         }
     }
 
     @Transactional
-    public void updateRolePrivilege(Role role){
+    public void updateRolePrivilege(Role role) {
         Role tempRole = roleService.getRole(role.getId());
-        if(Objects.equals(role.getPrivileges(),tempRole.getPrivileges())){
+        if (Objects.equals(role.getPrivileges(), tempRole.getPrivileges())) {
             //TODO: handle no change update
         }
         roleService.updateRole(role);

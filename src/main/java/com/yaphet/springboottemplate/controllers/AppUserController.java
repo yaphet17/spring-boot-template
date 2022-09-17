@@ -5,7 +5,9 @@ import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.services.AppUserService;
 import com.yaphet.springboottemplate.services.RoleService;
 import com.yaphet.springboottemplate.utilities.SelectedRole;
+
 import lombok.RequiredArgsConstructor;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +39,7 @@ public class AppUserController {
     public String getAppUsers(Model model,
                               @RequestParam(value = "page", required = false, defaultValue = "1") int currentPage,
                               @RequestParam(value = "size", required = false, defaultValue = "5") int size,
-                              @RequestParam(value = "sort", required = false, defaultValue = "firstName") String sortBy){
+                              @RequestParam(value = "sort", required = false, defaultValue = "firstName") String sortBy) {
         Page<AppUser> appUsersPage = appUserService.getAppUsers(currentPage - 1, size, sortBy);
         List<AppUser> appUserList = appUsersPage.getContent();
 
@@ -48,7 +51,7 @@ public class AppUserController {
     }
 
     @GetMapping("/detail/{id}")
-    public String getAppUser(@PathVariable("id") Long id, Model model){
+    public String getAppUser(@PathVariable("id") Long id, Model model) {
         AppUser appUser = appUserService.getAppUser(id);
 
         model.addAttribute("appUser", appUser);
@@ -56,7 +59,7 @@ public class AppUserController {
     }
 
     @GetMapping("/create")
-    public String createForm(Model model){
+    public String createForm(Model model) {
         AppUser appUser = new AppUser();
         List<Role> roleList = roleService.getRoles();
 
@@ -69,8 +72,8 @@ public class AppUserController {
     public String create(@Valid @ModelAttribute AppUser appUser,
                          @Valid @ModelAttribute SelectedRole selectedRole,
                          BindingResult result,
-                         RedirectAttributes redirectAttr){
-        if(result.hasErrors()){
+                         RedirectAttributes redirectAttr) {
+        if (result.hasErrors()) {
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:user/create";
         }
@@ -83,13 +86,13 @@ public class AppUserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id){
+    public String delete(@PathVariable("id") Long id) {
         appUserService.deleteAppUser(id);
         return "redirect:/user";
     }
 
     @GetMapping("/assign-role/{id}")
-    public String assignRoleForm(@PathVariable("id") Long id, Model model){
+    public String assignRoleForm(@PathVariable("id") Long id, Model model) {
         AppUser appUser = appUserService.getAppUser(id);
 
         List<Role> roleList = roleService.getRoles();
@@ -97,12 +100,13 @@ public class AppUserController {
         model.addAttribute("selectedRole", new SelectedRole(roleList));
         return "appuser/assign-role";
     }
+
     @PostMapping("/assign-role")
     public String assignRole(@RequestParam("id") Long id,
                              @Valid @ModelAttribute SelectedRole selectedRoles,
                              BindingResult result,
-                             RedirectAttributes redirectAttributes){
-        if(result.hasErrors()){
+                             RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:/user/assign-role/{id}";
         }
@@ -111,7 +115,6 @@ public class AppUserController {
         appUserService.updateAppUserRole(id, selectedRoles.getSelectedRoles());
         return "redirect:/user/detail/{id}";
     }
-
 
 
 }
