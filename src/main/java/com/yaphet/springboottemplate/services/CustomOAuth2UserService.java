@@ -25,7 +25,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String oauth2ClientName = userRequest.getClientRegistration().getClientName();
         String email = oAuth2User.getAttribute("email");
 
-        if (!appUserService.isUserExists(oAuth2User.getAttribute(email))) {
+        if (!appUserService.isUserExists((String)oAuth2User.getAttribute(email))) {
             AppUser appUser = createUserIfDoesNotExist(oAuth2User, oauth2ClientName);
             return new CustomOAuth2User(appUser, oauth2ClientName, oAuth2User);
         }

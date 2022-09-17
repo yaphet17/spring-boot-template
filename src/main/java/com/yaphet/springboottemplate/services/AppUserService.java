@@ -88,7 +88,11 @@ public class AppUserService implements UserDetailsService {
             throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, email));
         }
 
-        if (appUser.getRoles() == null || appUser.getRoles().size() == 0) {
+        if(appUser.getUserName().isEmpty()) {
+            appUser.setUserName(email);
+        }
+
+        if (appUser.getRoles().isEmpty()) {
             appUser.setRoles(Set.of(roleService.getRole("ROLE_USER")));
         }
 
@@ -119,7 +123,7 @@ public class AppUserService implements UserDetailsService {
         if (newEmail != null &&
                 newEmail.length() > 0 &&
                 !Objects.equals(newEmail, appUser.getEmail())) {
-            if (appUserRepository.findByEmail(newEmail).isPresent()) {
+            if (isUserExists(newEmail)) {
                 throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, newEmail));
             }
             appUser.setEmail(newEmail);
@@ -145,18 +149,18 @@ public class AppUserService implements UserDetailsService {
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)
-    public AppUser deleteAppUser(Long id) {
-        AppUser appUser = appUserRepository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id)));
+    public void deleteAppUser(Long id) {
+        if(isUserExists(id)) {
+            throw new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id));
+        }
         appUserRepository.deleteById(id);
-        return appUser;
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
     public int removeUnVerifiedUsers() {
         // remove users that have not been verified after 3 days
+        //TODO: get days from properties file
         return appUserRepository.deleteAllUnverifiedUsers(LocalDateTime.now().minusDays(3));
     }
 
@@ -216,5 +220,9 @@ public class AppUserService implements UserDetailsService {
 
     public boolean isUserExists(String email) {
         return appUserRepository.findByEmail(email).isPresent();
+    }
+
+    public boolean isUserExists(Long id) {
+        return appUserRepository.findById(id).isPresent();
     }
 }
