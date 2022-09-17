@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yaphet.springboottemplate.exceptions.EmailAlreadyConfirmedException;
 import com.yaphet.springboottemplate.exceptions.InvalidEmailException;
+import com.yaphet.springboottemplate.exceptions.ResourceAlreadyExistsException;
 import com.yaphet.springboottemplate.exceptions.ResourceNotFoundException;
 import com.yaphet.springboottemplate.exceptions.TokenExpiredException;
 import com.yaphet.springboottemplate.models.AppUser;
@@ -27,6 +28,8 @@ public class RegistrationService {
     private final AppUserRoleService appUserRoleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailSender;
+    private final String EMAIL_ALREADY_EXISTS_MSG = "Email %s already taken";
+
     private final String TOKEN_NOT_FOUND = "Token not found";
     private final String BASE_URL = new Properties().getProperty(
             "app-spring-boot-template.base-url",
@@ -39,6 +42,11 @@ public class RegistrationService {
         if (!isEmailValid) {
             throw new InvalidEmailException(email);
         }
+
+        if(appUserService.isUserExists(email)) {
+            throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, email));
+        }
+
         appUser.setUserName(email);
         String token = appUserService.signupUser(appUser);
         //assign default role to new user

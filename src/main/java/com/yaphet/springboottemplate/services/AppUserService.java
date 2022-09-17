@@ -81,11 +81,10 @@ public class AppUserService implements UserDetailsService {
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)
-    public void saveAppUser(AppUser appUser) {
+    public AppUser saveAppUser(AppUser appUser) {
         String email = appUser.getEmail();
-        boolean emailExists = appUserRepository.findByEmail(email).isPresent();
 
-        if (emailExists) {
+        if (isUserExists(email)) {
             throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, email));
         }
 
@@ -102,12 +101,12 @@ public class AppUserService implements UserDetailsService {
             appUser.setAuthType(AuthenticationType.LOCAL);
         }
 
-        appUserRepository.save(appUser);
+        return appUserRepository.save(appUser);
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
-    public boolean updateAppUser(AppUser au) {
+    public AppUser updateAppUser(AppUser au) {
         boolean isUpdated = false;
         String newEmail = au.getEmail();
         String firstName = au.getFirstName();
@@ -140,17 +139,18 @@ public class AppUserService implements UserDetailsService {
             isUpdated = true;
         }
         if (isUpdated) {
-            appUserRepository.save(appUser);
+            appUser = appUserRepository.save(appUser);
         }
-        return isUpdated;
+        return appUser;
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)
-    public void deleteAppUser(Long id) {
+    public AppUser deleteAppUser(Long id) {
         AppUser appUser = appUserRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id)));
         appUserRepository.deleteById(id);
+        return appUser;
     }
 
     @CacheEvict(value = "appUsers", allEntries = true)

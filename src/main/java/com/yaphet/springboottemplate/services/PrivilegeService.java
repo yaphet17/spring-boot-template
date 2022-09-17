@@ -2,6 +2,7 @@ package com.yaphet.springboottemplate.services;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +41,7 @@ public class PrivilegeService {
         return privilegeRepository.findAll(pageable);
     }
 
+    @CacheEvict(value = "privileges", allEntries = true)
     public void createPrivilege(Privilege privilege) {
         String privilegeName = privilege.getPrivilegeName();
         boolean privilegeExists = privilegeRepository.findByPrivilegeName(privilegeName).isPresent();

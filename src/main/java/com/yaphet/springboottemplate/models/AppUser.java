@@ -41,7 +41,7 @@ import lombok.Setter;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "app_users")
-@SQLDelete(sql = "UPDATE app_users SET deleted = true WHERE appuser_id = ?")
+@SQLDelete(sql = "UPDATE app_users SET deleted = true AND email=null WHERE appuser_id = ?")
 @Where(clause = "deleted = false")
 public class AppUser implements Serializable {
 

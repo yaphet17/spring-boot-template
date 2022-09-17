@@ -26,12 +26,15 @@ public class CustomErrorController implements ErrorController {
         model.addAttribute("errorMsg", errorMessage);
         if (status != null) {
             int statusCode = Integer.parseInt(status.toString());
+            model.addAttribute("statusCode", statusCode);
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 logger.warn("page not found : error code " + statusCode);
                 return "error/error-404";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 logger.warn("internal server error : error code " + statusCode);
                 return "error/error-500";
+            } else if (statusCode == HttpStatus.CONFLICT.value()) {
+
             }
         }
         logger.warn("unknown error occurred");
