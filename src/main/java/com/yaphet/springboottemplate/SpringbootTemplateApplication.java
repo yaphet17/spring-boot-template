@@ -49,4 +49,5 @@ public class SpringbootTemplateApplication {
  * - Handle admin that to delete super admin or it self
  * - Consider creating an aspect to delete remember-me tokens when a user is deleted
  * - Adhere to UpperCase for final property names
+ * - Clean up property files
  */

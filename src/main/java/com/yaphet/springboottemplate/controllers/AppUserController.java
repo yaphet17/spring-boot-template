@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.yaphet.springboottemplate.controllers.error.CustomErrorController.getBindingErrorMessage;
 
@@ -101,15 +102,13 @@ public class AppUserController {
                              @Valid @ModelAttribute SelectedRole selectedRoles,
                              BindingResult result,
                              RedirectAttributes redirectAttributes){
-        AppUser appUser = appUserService.getAppUser(id);
-
-        redirectAttributes.addAttribute("id", id);
         if(result.hasErrors()){
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:/user/assign-role/{id}";
         }
-        appUser.setRoles(new HashSet<>(selectedRoles.getSelectedRoles()));
-        appUserService.updateAppUserRole(appUser);
+
+        redirectAttributes.addAttribute("id", id);
+        appUserService.updateAppUserRole(id, selectedRoles.getSelectedRoles());
         return "redirect:/user/detail/{id}";
     }
 

@@ -1,9 +1,11 @@
 package com.yaphet.springboottemplate.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,7 +91,7 @@ public class AppUserService implements UserDetailsService {
             throw new ResourceAlreadyExistsException(String.format(EMAIL_ALREADY_EXISTS_MSG, email));
         }
 
-        if (appUser.getRoles() == null) {
+        if (appUser.getRoles() == null || appUser.getRoles().size() == 0) {
             appUser.setRoles(Set.of(roleService.getRole("ROLE_USER")));
         }
 
@@ -150,10 +152,6 @@ public class AppUserService implements UserDetailsService {
         AppUser appUser = appUserRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id)));
-        Set<Role> appUserRoles = appUser.getRoles();
-        for (Role role : appUserRoles) {
-            role.removeAppUser(appUser);
-        }
         appUserRepository.deleteById(id);
     }
 
@@ -172,17 +170,25 @@ public class AppUserService implements UserDetailsService {
 
     @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
-    public void updateAppUserRole(AppUser appUser) {
-        String email = appUser.getEmail();
-
-        appUserRepository
-                .findByEmail(email)
-//                .filter(user -> Objects.equals(appUser.getRoles(), user.getRoles()))
-                .map(appUserRepository::save)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(EMAIL_NOT_FOUND_MSG, email)));
+    public void updateAppUserRole(Long id, List<Role> newRoles) {
+        AppUser appUser = getAppUser(id);
+        Set<Role> roles = newRoles
+                .stream()
+                .map(role -> roleService.getRole(role.getRoleName()))
+                .collect(Collectors.toSet());
+        appUser.getRoles().addAll(roles);
+        appUserRepository.save(appUser);
     }
 
-    public String signUpUser(AppUser appUser) {
+    @CacheEvict(value = "appUsers", allEntries = true)
+    @Transactional
+    public void updateAppUserRole(String email, String roleName) {
+        AppUser appUser = getAppUser(email);
+        Role role = roleService.getRole(roleName);
+        appUser.getRoles().add(role);
+    }
+
+    public String signupUser(AppUser appUser) {
         String token = UUID.randomUUID().toString();
 
         saveAppUser(appUser);

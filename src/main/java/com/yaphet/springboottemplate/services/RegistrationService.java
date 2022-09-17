@@ -40,7 +40,7 @@ public class RegistrationService {
             throw new InvalidEmailException(email);
         }
         appUser.setUserName(email);
-        String token = appUserService.signUpUser(appUser);
+        String token = appUserService.signupUser(appUser);
         //assign default role to new user
         appUserRoleService.assignRole(appUser.getEmail(),"ROLE_USER");
         String link = BASE_URL + "/confirm?token=" + token;
