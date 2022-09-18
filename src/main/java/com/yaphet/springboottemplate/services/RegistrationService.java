@@ -60,7 +60,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public void confirmToken(@RequestParam("token") String token) {
+    public void confirmToken(@RequestParam("token") String token) throws EmailAlreadyConfirmedException {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() -> new ResourceNotFoundException(TOKEN_NOT_FOUND));

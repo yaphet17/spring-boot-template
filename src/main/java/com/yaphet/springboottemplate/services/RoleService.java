@@ -57,6 +57,7 @@ public class RoleService {
                 size,
                 sortBy.startsWith("-") ? Sort.by(sortBy.substring(1)).descending() : Sort.by(sortBy)
         );
+
         return roleRepository.findAll(pageable);
     }
 

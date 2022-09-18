@@ -1,5 +1,6 @@
 package com.yaphet.springboottemplate.controllers;
 
+import com.yaphet.springboottemplate.exceptions.EmailAlreadyConfirmedException;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.services.RegistrationService;
 
@@ -47,7 +48,11 @@ public class RegistrationController {
 
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) {
-        appUserRegistrationService.confirmToken(token);
+        try {
+            appUserRegistrationService.confirmToken(token);
+        } catch (EmailAlreadyConfirmedException e) {
+
+        }
         return "registration/email-verified";
     }
 

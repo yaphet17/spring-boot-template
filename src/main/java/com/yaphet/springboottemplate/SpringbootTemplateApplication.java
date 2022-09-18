@@ -42,6 +42,7 @@ public class SpringbootTemplateApplication {
  * - Fix issue with remember me functionality (Done)
  * - Implement a feature to assign default role for a user when a role is deleted (Done-prevent deletion)
  * ---In progress ---
+ * - Display error message as flash messages
  * - Change existing email template
  * - Send email to users registered by admins
  * - Send welcome email to new users after email verification
@@ -50,4 +51,5 @@ public class SpringbootTemplateApplication {
  * - Consider creating an aspect to delete remember-me tokens when a user is deleted
  * - Adhere to UpperCase for final property names
  * - Clean up property files
+ * - Create indexes for all entities
  */

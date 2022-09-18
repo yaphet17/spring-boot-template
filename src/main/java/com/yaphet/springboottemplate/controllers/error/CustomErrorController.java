@@ -23,21 +23,20 @@ public class CustomErrorController implements ErrorController {
     public String handleError(HttpServletRequest request, Model model) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         String errorMessage = String.valueOf(request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
-        model.addAttribute("errorMsg", errorMessage);
-        if (status != null) {
-            int statusCode = Integer.parseInt(status.toString());
-            model.addAttribute("statusCode", statusCode);
-            if (statusCode == HttpStatus.NOT_FOUND.value()) {
-                logger.warn("page not found : error code " + statusCode);
-                return "error/error-404";
-            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                logger.warn("internal server error : error code " + statusCode);
-                return "error/error-500";
-            } else if (statusCode == HttpStatus.CONFLICT.value()) {
+        int statusCode = Integer.parseInt(status.toString());
 
-            }
+        model.addAttribute("errorMsg", errorMessage);
+        model.addAttribute("statusCode", statusCode);
+
+        if (statusCode == HttpStatus.NOT_FOUND.value()) {
+            logger.debug("message: " + errorMessage + " : status code " + statusCode);
+            return "error/error-404";
+        } else if (String.valueOf(statusCode).startsWith("4")) {
+            logger.debug("message: " + errorMessage + " : status code " + statusCode);
+        } else if (String.valueOf(statusCode).startsWith("5")) {
+            logger.error("message: internal server error : status code " + statusCode);
         }
-        logger.warn("unknown error occurred");
+
         return "error/error";
     }
 }
