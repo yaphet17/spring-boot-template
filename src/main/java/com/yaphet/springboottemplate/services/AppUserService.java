@@ -39,7 +39,7 @@ public class AppUserService implements UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final RoleService roleService;
-    private final String USER_NOT_FOUND_MSG = "user with %s not found";
+    private final String USER_NOT_FOUND_MSG = "User with %s not found";
     private final String EMAIL_NOT_FOUND_MSG = "User not found with email %s";
     private final String ID_NOT_FOUND_MSG = "App user not found with id %d";
     private final String EMAIL_ALREADY_EXISTS_MSG = "Email %s already taken";
@@ -150,9 +150,11 @@ public class AppUserService implements UserDetailsService {
 
     @CacheEvict(value = "appUsers", allEntries = true)
     public void deleteAppUser(Long id) {
-        if(isUserExists(id)) {
+        if(!isUserExists(id)) {
             throw new ResourceNotFoundException(String.format(ID_NOT_FOUND_MSG, id));
         }
+        //TODO: check if user is trying to delete its own account
+        //TODO: check if user is trying to delete its super-admin account
         appUserRepository.deleteById(id);
     }
 
