@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 
 import org.hibernate.annotations.SQLDelete;
@@ -41,7 +42,7 @@ import lombok.Setter;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "app_users")
-@SQLDelete(sql = "UPDATE app_users SET deleted = true AND email=null WHERE appuser_id = ?")
+@SQLDelete(sql = "UPDATE app_users SET deleted = true WHERE appuser_id = ?")
 @Where(clause = "deleted = false")
 public class AppUser implements Serializable {
 
@@ -55,17 +56,21 @@ public class AppUser implements Serializable {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    @Column(name = "appuser_id")
+    @Column(name = "appuser_id", nullable = false)
     private Long id;
     @Column(name = "first_name", nullable = false)
+    @NotEmpty(message = "First name can't be null or empty")
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+    @Column(name = "user_name", nullable = false)
     private String userName;
-    @Email
+    @Email(message = "Invalid email address")
+    @NotEmpty(message = "Email can't be null or empty")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password")
+    @NotEmpty(message = "Password can't be null or empty")
     private String password;
     @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

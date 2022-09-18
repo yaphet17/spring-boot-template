@@ -71,15 +71,16 @@ public class AppUserController {
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute AppUser appUser,
-                         @Valid @ModelAttribute SelectedRole selectedRole,
                          BindingResult result,
-                         RedirectAttributes redirectAttr) {
+                         @ModelAttribute SelectedRole selectedRole,
+                         RedirectAttributes redirectAttr,
+                         Model model) {
         if (result.hasErrors()) {
-            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
-            return "redirect:user/create";
+            List<Role> roleList = roleService.getRoles();
+            model.addAttribute("selectedRole", new SelectedRole(roleList));
+            return "appuser/create-appuser";
         }
-
 
         try {
             appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
@@ -120,7 +121,7 @@ public class AppUserController {
                              RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
-            return "redirect:/user/assign-role/{id}";
+            return "appuser/assign-role";
         }
 
         redirectAttributes.addAttribute("id", id);

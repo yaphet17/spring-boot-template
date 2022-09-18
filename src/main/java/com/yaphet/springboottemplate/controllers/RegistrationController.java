@@ -43,9 +43,8 @@ public class RegistrationController {
                            BindingResult result,
                            RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
-            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
-            return "redirect:/register";
+            return "registration/register-user";
         }
 
         try{

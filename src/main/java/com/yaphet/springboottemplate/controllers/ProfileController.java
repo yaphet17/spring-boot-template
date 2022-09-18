@@ -52,9 +52,8 @@ public class ProfileController {
                          BindingResult result,
                          RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
-            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
             logger.error(result.getAllErrors());
-            return "redirect:/profile/edit";
+            return "/profile/profile-edit";
         }
         try {
             appUser = appUserService.updateAppUser(appUser);

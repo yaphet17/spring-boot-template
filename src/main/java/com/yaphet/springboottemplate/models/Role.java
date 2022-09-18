@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class Role implements Serializable {
     @Column(name = "role_id")
     private Long id;
     @Column(name = "role_name", nullable = false, unique = true)
+    @NotEmpty(message = "Role name can't be empty")
     private String roleName;
     @Column(name = "role_description")
     private String roleDescription;

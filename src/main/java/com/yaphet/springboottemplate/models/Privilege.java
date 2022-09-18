@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class Privilege implements Serializable {
     @Column(name = "privilege_id")
     private Long id;
     @Column(name = "privilege_name", nullable = false, unique = true)
+    @NotEmpty(message = "Privilege name can't be empty")
     private String privilegeName;
     @ManyToMany(mappedBy = "privileges")
     private Set<Role> roles;

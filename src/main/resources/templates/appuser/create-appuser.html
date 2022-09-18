@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymleaf.org">
+<html lang="en" xmlns:th="http://www.thymleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="layouts/site :: head(title='Create User')">
 </head>
 <body>
@@ -17,22 +17,22 @@
     <div class="mb-3">
         <label for="firstName" class="form-label">First Name</label>
         <input type="text" th:field="*{appUser.firstName}" class="form-control" id="firstName" >
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.firstName')}" th:errorClass="error" th:errors="*{appUser.firstName}"/>
+        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.firstName')}" th:errorClass="error" th:errors="*{appUser.firstName}"></p>
     </div>
     <div class="mb-3">
         <label for="lastName" class="form-label">Last Name</label>
         <input type="text" th:field="*{appUser.lastName}" class="form-control" id="lastName" >
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.lastName')}" th:errorClass="error" th:errors="*{appUser.lastName}"/>
+        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.lastName')}" th:errorClass="error" th:errors="*{appUser.lastName}"></p>
     </div>
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" th:field="*{appUser.email}" class="form-control" id="email" >
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.email')}" th:errorClass="error" th:errors="*{appUser.email}"/>
+        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.email')}" th:errorClass="error" th:errors="*{appUser.email}"></p>
     </div>
     <div class="mb-3">
         <label for="dob" class="form-label">Data of birth</label>
         <input type="date" th:field="*{appUser.dob}" class="form-control" id="dob" >
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.dob')}" th:errorClass="error" th:errors="*{appUser.dob}"/>
+        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.dob')}" th:errorClass="error" th:errors="*{appUser.dob}"></p>
     </div>
     <select class="form-control form-control-sm" aria-label="Default select example" id="roleList"  th:field="*{selectedRole.selectedRoles}" multiple="multiple">
         <option th:each="role:${selectedRole.selectedRoles}" th:value="*{role.id}"
@@ -41,7 +41,7 @@
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" th:field="*{appUser.password}" class="form-control" id="password" >
-        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.password')}" th:errorClass="error" th:errors="*{appUser.password}"/>
+        <p class="alert alert-warning" th:if="${#fields.hasErrors('appUser.password')}" th:errorClass="error" th:errors="*{appUser.password}"></p>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

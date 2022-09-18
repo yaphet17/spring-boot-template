@@ -72,9 +72,8 @@ public class RoleController {
                              BindingResult result,
                              RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
-            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
             log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
-            return "redirect: role/create";
+            return "role/create-role";
         }
 
         try {
@@ -152,7 +151,7 @@ public class RoleController {
         redirectAttr.addAttribute("id", role.getId());
         if (result.hasErrors()) {
             log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
-            return "redirect:/role/assign-privilege/{id}";
+            return "role/assign-privilege";
         }
         rolePrivilegeService.assignPrivilege(selectPrivilege.getSelectedPrivileges(), role.getRoleName());
         return "redirect:/role/detail/{id}";
