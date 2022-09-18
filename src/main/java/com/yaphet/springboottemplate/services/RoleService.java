@@ -32,7 +32,7 @@ public class RoleService {
     private final String ROLE_ALREADY_EXISTS = "Role %s already exists";
 
     @CacheEvict(cacheNames = "roles", allEntries = true)
-    public void createRole(Role role) {
+    public Role createRole(Role role) throws ResourceAlreadyExistsException {
         String roleName = role.getRoleName().toUpperCase();
         if (!roleName.startsWith("ROLE_")) {
             roleName = "ROLE_" + roleName;
@@ -43,7 +43,7 @@ public class RoleService {
         if (roleExists) {
             throw new ResourceAlreadyExistsException(String.format(ROLE_ALREADY_EXISTS, roleName));
         }
-        roleRepository.save(role);
+       return roleRepository.save(role);
     }
 
     @Cacheable(value = "roles")

@@ -35,7 +35,7 @@ public class RegistrationService {
             "app-spring-boot-template.base-url",
             "http://localhost:8080");
 
-    public void register(AppUser appUser) {
+    public void register(AppUser appUser) throws ResourceAlreadyExistsException {
         String email = appUser.getEmail();
         boolean isEmailValid = emailValidator.test(email);
 

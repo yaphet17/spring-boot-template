@@ -52,4 +52,8 @@ public class SpringbootTemplateApplication {
  * - Adhere to UpperCase for final property names
  * - Clean up property files
  * - Create indexes for all entities
+ * - Add feature to let the admin reset their password
+ * - Make use of models returned from service classes
+ * - Change model binding error log level
+ * - Modify database seeder to check for emptiness of each entity
  */

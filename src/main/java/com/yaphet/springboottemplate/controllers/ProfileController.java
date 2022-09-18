@@ -1,5 +1,6 @@
 package com.yaphet.springboottemplate.controllers;
 
+import com.yaphet.springboottemplate.exceptions.ResourceAlreadyExistsException;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.services.AppUserService;
 import com.yaphet.springboottemplate.services.ProfileService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -26,7 +28,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("profile")
 public class ProfileController {
-    private static final Logger log = LogManager.getLogger(ProfileController.class);
+    private static final Logger logger = LogManager.getLogger(ProfileController.class);
     private final AppUserService appUserService;
     private final ProfileService profileService;
 
@@ -46,13 +48,23 @@ public class ProfileController {
     }
 
     @PostMapping("/edit")
-    public String update(@Valid @ModelAttribute AppUser appUser, BindingResult result) {
+    public String update(@Valid @ModelAttribute AppUser appUser,
+                         BindingResult result,
+                         RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
-            log.error(result.getAllErrors());
+            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
+            logger.error(result.getAllErrors());
             return "redirect:/profile/edit";
         }
-        appUserService.updateAppUser(appUser);
-        return "redirect:/profile";
+        try {
+            appUser = appUserService.updateAppUser(appUser);
+            redirectAttr.addFlashAttribute("successMessage", "Profile successfully updated");
+            return "redirect:/profile";
+        } catch (ResourceAlreadyExistsException e) {
+            redirectAttr.addFlashAttribute("errorMessage", e.getMessage());
+            logger.debug(e.getMessage(), e);
+            return "redirect:/profile/edit";
+        }
     }
 
     @GetMapping("/change-password")
@@ -66,15 +78,25 @@ public class ProfileController {
 
     @PostMapping("/change-password")
     @PreAuthorize("#changePassword.username == principal.username")
-    public String changePassword(@ModelAttribute ChangePassword changePassword, BindingResult result) {
+    public String changePassword(@ModelAttribute ChangePassword changePassword,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
-            log.error(result.getAllErrors());
+            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
+            logger.error(result.getAllErrors());
             return "redirect: /profile/change-password";
         }
-        profileService.changePassword(changePassword.getUsername(),
-                changePassword.getOldPassword(),
-                changePassword.getNewPassword());
-        return "redirect:/profile";
+        try {
+            profileService.changePassword(changePassword.getUsername(),
+                    changePassword.getOldPassword(),
+                    changePassword.getNewPassword());
+            redirectAttr.addFlashAttribute("successMessage", "Password successfully changed");
+            return "redirect:/profile";
+        } catch (ResourceAlreadyExistsException e) {
+            redirectAttr.addFlashAttribute("errorMessage", e.getMessage());
+            logger.debug(e.getMessage(), e);
+            return "redirect: /profile/change-password";
+        }
     }
 
     private String getLoggedInUser() {

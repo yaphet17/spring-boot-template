@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.yaphet.springboottemplate.exceptions.ResourceAlreadyExistsException;
 import com.yaphet.springboottemplate.models.Privilege;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.services.PrivilegeService;
@@ -67,13 +68,26 @@ public class RoleController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('ROLE-CREATE')")
-    public String createRole(@Valid @ModelAttribute Role role, BindingResult result) {
+    public String createRole(@Valid @ModelAttribute Role role,
+                             BindingResult result,
+                             RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
+            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
             log.error(getBindingErrorMessage() + " : " + result.getAllErrors());
-            return "role/create-role";
+            return "redirect: role/create";
         }
-        roleService.createRole(role);
-        return "redirect:/role";
+
+        try {
+            role = roleService.createRole(role);
+            redirectAttr
+                    .addAttribute("id", role.getId())
+                    .addFlashAttribute("successMessage", "Role successfully created");
+            return "redirect:/role/detail/{id}";
+        } catch (ResourceAlreadyExistsException e) {
+            redirectAttr.addFlashAttribute("errorMessage", e.getMessage());
+            log.debug(e.getMessage(), e);
+            return "redirect:/role/create";
+        }
     }
 
     @GetMapping("/detail/{id}")

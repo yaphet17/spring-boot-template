@@ -1,5 +1,6 @@
 package com.yaphet.springboottemplate.controllers;
 
+import com.yaphet.springboottemplate.exceptions.ResourceAlreadyExistsException;
 import com.yaphet.springboottemplate.models.AppUser;
 import com.yaphet.springboottemplate.models.Role;
 import com.yaphet.springboottemplate.services.AppUserService;
@@ -74,15 +75,26 @@ public class AppUserController {
                          BindingResult result,
                          RedirectAttributes redirectAttr) {
         if (result.hasErrors()) {
+            redirectAttr.addFlashAttribute("errorMessage", result.getFieldError());
             logger.error(getBindingErrorMessage() + " : " + result.getAllErrors());
             return "redirect:user/create";
         }
-        appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
-        appUser.setEnabled(true);
-        appUserService.saveAppUser(appUser);
-        Long id = appUserService.getAppUser(appUser.getEmail()).getId();
-        redirectAttr.addAttribute("id", id);
-        return "redirect:/user/detail/{id}";
+
+
+        try {
+            appUser.setRoles(new HashSet<>(selectedRole.selectedRoles));
+            appUser.setEnabled(true);
+            appUser = appUserService.saveAppUser(appUser);
+            logger.debug("User successfully created");
+            redirectAttr
+                    .addAttribute("id", appUser.getId())
+                    .addFlashAttribute("successMessage", "User successfully created");
+            return "redirect:/user/detail/{id}";
+        } catch (ResourceAlreadyExistsException e) {
+            redirectAttr.addFlashAttribute("errorMessage", e.getMessage());
+            logger.debug(e.getMessage(), e);
+            return "redirect:/user/detail/{id}";
+        }
     }
 
     @GetMapping("/delete/{id}")

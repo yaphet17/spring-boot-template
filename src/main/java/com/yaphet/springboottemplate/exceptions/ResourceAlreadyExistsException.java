@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Resource already exists")
-public class ResourceAlreadyExistsException extends RuntimeException {
+public class ResourceAlreadyExistsException extends Exception {
     private static final Logger logger = LogManager.getLogger(ResourceAlreadyExistsException.class);
 
     public ResourceAlreadyExistsException(String message) {

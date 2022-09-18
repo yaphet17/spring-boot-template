@@ -42,7 +42,7 @@ public class PrivilegeService {
     }
 
     @CacheEvict(value = "privileges", allEntries = true)
-    public void createPrivilege(Privilege privilege) {
+    public void createPrivilege(Privilege privilege) throws ResourceAlreadyExistsException {
         String privilegeName = privilege.getPrivilegeName();
         boolean privilegeExists = privilegeRepository.findByPrivilegeName(privilegeName).isPresent();
 

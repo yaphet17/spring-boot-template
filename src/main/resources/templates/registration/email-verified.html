@@ -8,7 +8,8 @@
 </head>
 <body>
 <div class="container">
-  <h1 class="text-success align-content-center justify-content-center">email success verified</h1>
+  <h1 th:if="${errorMessage}" class="text-danger align-content-center justify-content-center" th:text="errorMessage"></h1>
+  <h1 th:if="${successMessage}" class="text-success align-content-center justify-content-center" th:text="successMessage"></h1>
 </div>
 </body>
 </html>

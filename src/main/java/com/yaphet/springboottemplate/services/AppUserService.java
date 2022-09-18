@@ -80,8 +80,9 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(EMAIL_NOT_FOUND_MSG, email)));
     }
 
+
     @CacheEvict(value = "appUsers", allEntries = true)
-    public AppUser saveAppUser(AppUser appUser) {
+    public AppUser saveAppUser(AppUser appUser) throws ResourceAlreadyExistsException {
         String email = appUser.getEmail();
 
         if (isUserExists(email)) {
@@ -110,7 +111,7 @@ public class AppUserService implements UserDetailsService {
 
     @CacheEvict(value = "appUsers", allEntries = true)
     @Transactional
-    public AppUser updateAppUser(AppUser au) {
+    public AppUser updateAppUser(AppUser au) throws ResourceAlreadyExistsException {
         boolean isUpdated = false;
         String newEmail = au.getEmail();
         String firstName = au.getFirstName();
@@ -192,7 +193,7 @@ public class AppUserService implements UserDetailsService {
         appUser.getRoles().add(role);
     }
 
-    public String signupUser(AppUser appUser) {
+    public String signupUser(AppUser appUser) throws ResourceAlreadyExistsException {
         String token = UUID.randomUUID().toString();
 
         saveAppUser(appUser);
